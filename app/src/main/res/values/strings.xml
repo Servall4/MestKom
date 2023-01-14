@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MestKom</string>
     <string name="login">Вход</string>
-    <string name="regitster">Регистрация</string>
+    <string name="register">Регистрация</string>
 </resources>
