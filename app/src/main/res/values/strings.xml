@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">MestKom</string>
     <string name="login">Вход</string>
-    <string name="regitster">Регистрация</string>
+    <string name="register">Регистрация</string>
+    <string name="map">Карта</string>
+    <string name="home">Дом</string>
+    <string name="settings">Настройки</string>
+    <string name="notifications">Уведомления</string>
+    <string name="about">О программе</string>
 </resources>
