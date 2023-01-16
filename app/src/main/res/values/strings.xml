@@ -2,11 +2,20 @@
     <string name="app_name">MestKom</string>
     <string name="login">Вход</string>
     <string name="register">Регистрация</string>
+    <string name="goregister">Зарегистрируйтесь</string>
+    <string name="or">или</string>
     <string name="username">Логин</string>
     <string name="password">Пароль</string>
+    <string name="password2">Подтверждение пароля</string>
+    <string name="email">Электронная почта</string>
     <string name="map">Карта</string>
     <string name="home">Дом</string>
     <string name="settings">Настройки</string>
     <string name="notifications">Уведомления</string>
     <string name="about">О программе</string>
+    <string name="loginerr">Неверный логин</string>
+    <string name="passwerr">Неверный пароль</string>
+    <string name="samepasswerr">Пароли отличаются</string>
+    <string name="emailerr">Неверная электронная почта</string>
+    <string name="forgotpassw">Забыли пароль?</string>
 </resources>
