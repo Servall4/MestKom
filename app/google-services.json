@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "560092009395",
+    "project_id": "mestkom-166d8",
+    "storage_bucket": "mestkom-166d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560092009395:android:f75c960baee6f04a5e71c6",
+        "android_client_info": {
+          "package_name": "com.mestkom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560092009395-3smp61nas6u7696ljo828efae71k06m7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_9je9BVJX2dJvyyyz-qa16_Bz6XwEXXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560092009395-3smp61nas6u7696ljo828efae71k06m7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
