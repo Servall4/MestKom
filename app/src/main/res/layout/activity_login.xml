@@ -83,11 +83,11 @@
         android:layout_height="48dp"
         android:layout_marginTop="64dp"
         android:background="@drawable/id_google"
+        android:elevation="3dp"
         android:fontFamily="@font/helvetica"
         android:gravity="center_vertical"
         android:hint="@string/username"
         android:paddingLeft="20dp"
-        android:elevation="3dp"
         android:textAlignment="gravity"
         android:textColor="@color/black"
         android:textIsSelectable="true"
@@ -95,6 +95,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/some_id" />
+
+    <TextView
+        android:id="@+id/loginerr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="52dp"
+        android:text="@string/loginerr"
+        android:textColor="#E53935"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login" />
 
     <EditText
         android:id="@+id/password"
@@ -118,20 +129,30 @@
         app:layout_constraintVertical_bias="0.296" />
 
     <TextView
+        android:id="@+id/passworderr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="52dp"
+        android:text="@string/passwerr"
+        android:textColor="#E53935"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <TextView
         android:id="@+id/forgotpassw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="253dp"
         android:layout_marginEnd="51dp"
-        android:layout_marginBottom="32dp"
         android:clickable="true"
         android:fontFamily="@font/poppins_extralight"
         android:text="@string/forgotpassw"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/loginbtn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        tools:layout_editor_absoluteY="847dp" />
 
     <ImageButton
         android:id="@+id/loginbtn"

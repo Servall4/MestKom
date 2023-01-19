@@ -18,4 +18,5 @@
     <string name="samepasswerr">Пароли отличаются</string>
     <string name="emailerr">Неверная электронная почта</string>
     <string name="forgotpassw">Забыли пароль?</string>
+    <string name="error">Ошибка</string>
 </resources>
