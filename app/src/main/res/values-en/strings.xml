@@ -17,6 +17,7 @@
     <string name="loginerr">Invalid login</string>
     <string name="passwerr">Invalid password</string>
     <string name="samepasswerr">Passwords are different</string>
+    <string name="passwordlength">Password must contain at least 8 symbols</string>
     <string name="emailerr">Invalid e-mail</string>
     <string name="forgotpassw">Forgot your password?</string>
     <string name="error">Error</string>
