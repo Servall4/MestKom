@@ -189,6 +189,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/right_arrow_1"
         android:text="go"
+        android:onClick="createAccount"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
