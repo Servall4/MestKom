@@ -1,42 +1,42 @@
 package com.example.mestkom
 
+import android.content.Intent
+import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
+import com.example.mestkom.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.ThreadContextElement
+
 
 class activity_register : AppCompatActivity() {
-    private lateinit var auth: FirebaseAuth;
+
+    private lateinit var binding:ActivityRegisterBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
-        val loginEditText: EditText = findViewById(R.id.login)
-        val passwordEditText: EditText = findViewById(R.id.password)
-        val confirmpasswordEditText: EditText = findViewById(R.id.confirmpassword)
-        val emailEditText: EditText = findViewById(R.id.email)
-        val createaccount: ImageButton = findViewById(R.id.loginbtn)
-        val loginerr: TextView = findViewById(R.id.loginerr)
-        val passworderr: TextView = findViewById(R.id.samepassworderr)
-        val emailerr: TextView = findViewById(R.id.emailerr)
-        val passwordlength: TextView = findViewById(R.id.passwordlength)
+        supportActionBar?.hide()
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        firebaseAuth = FirebaseAuth.getInstance()
 
-
-        fun createAccountInFirebase(email: String, login:String, password: String): Unit {
-
-            return
-        }
-
-
+        val loginEditText: EditText = binding.login
+        val passwordEditText: EditText = binding.password
+        val confirmpasswordEditText: EditText = binding.confirmpassword
+        val emailEditText: EditText = binding.email
+        val createaccount: ImageButton = binding.loginbtn
+        val loginerr: TextView = binding.loginerr
+        val samepassworderr: TextView = binding.samepassworderr
+        val emailerr: TextView = binding.emailerr
+        val passwordlength: TextView = binding.passwordlength
 
 
         fun validateData(email: String, login:String, password:String, confirmpassword:String): Boolean {
@@ -55,10 +55,10 @@ class activity_register : AppCompatActivity() {
                 passwordlength.visibility = View.GONE
 
             if (password != confirmpassword){
-                passworderr.visibility = View.VISIBLE
+                samepassworderr.visibility = View.VISIBLE
                 return false
             } else
-                passworderr.visibility = View.GONE
+                samepassworderr.visibility = View.GONE
 
             if (!login.matches(Regex("^(?=.*[A-Za-z0-9]\$)[A-Za-z][A-Za-z\\d.-]{0,19}\$"))){
                 loginerr.visibility = View.VISIBLE
@@ -69,20 +69,27 @@ class activity_register : AppCompatActivity() {
             return true
         }
 
-        fun createAccount(): Unit {
 
+        createaccount.setOnClickListener({
             var email: String = emailEditText.text.toString()
             var login: String = loginEditText.text.toString()
             var password: String = passwordEditText.text.toString()
             var confirmpassword: String = confirmpasswordEditText.text.toString()
 
-            var isValidated: Boolean = validateData(email, login, password, confirmpassword)
+            if (validateData(email, login, password, confirmpassword)){
+                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener({
+                    if (it.isSuccessful) {
+                        val intent = Intent(this, activity_login::class.java)
+                        startActivity(intent)
+                    } else
+                    {
+                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+        })
 
-            if (!isValidated)
-                return
-
-            createAccountInFirebase(email, login, password)
-        }
 
     }
+
 }
