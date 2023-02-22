@@ -6,35 +6,43 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import com.example.mestkom.databinding.ActivityLoginBinding
 import com.example.mestkom.databinding.ActivityRegisterBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import kotlin.math.log
 
 class activity_login : AppCompatActivity() {
 
-    private lateinit var binding: ActivityRegisterBinding
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var binding: ActivityLoginBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        firebaseAuth = FirebaseAuth.getInstance()
         supportActionBar?.hide()
 
 
-        val login: EditText = binding.login
-        val password: EditText = binding.password
-
+        val loginEditText: EditText = binding.login
+        val passwordEditText: EditText = binding.password
         val loginbtn: ImageButton = binding.loginbtn
         val registerbtn: ImageButton = binding.registerbtn
 
-        register.setOnClickListener({
+        fun validateData(login: String, password: String): Boolean {
+            if (login.isNotEmpty() && password.isNotEmpty())
+                return true
+            else
+                return false
+
+        }
+
+        registerbtn.setOnClickListener({
             val intent = Intent(this, activity_register::class.java)
             startActivity(intent)
         })
+
+
+
+
 
     }
 }

@@ -12,13 +12,11 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.example.mestkom.databinding.ActivityRegisterBinding
-import com.google.firebase.auth.FirebaseAuth
 
 
 class activity_register : AppCompatActivity() {
 
     private lateinit var binding:ActivityRegisterBinding
-    private lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +24,6 @@ class activity_register : AppCompatActivity() {
         supportActionBar?.hide()
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        firebaseAuth = FirebaseAuth.getInstance()
 
         val loginEditText: EditText = binding.login
         val passwordEditText: EditText = binding.password
@@ -69,7 +66,7 @@ class activity_register : AppCompatActivity() {
             return true
         }
 
-
+/*
         createaccount.setOnClickListener({
             var email: String = emailEditText.text.toString()
             var login: String = loginEditText.text.toString()
@@ -86,9 +83,11 @@ class activity_register : AppCompatActivity() {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                     }
                 })
+
+
             }
         })
-
+*/
 
     }
 
