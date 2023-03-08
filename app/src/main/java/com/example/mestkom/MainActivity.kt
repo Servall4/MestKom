@@ -3,7 +3,10 @@ package com.example.mestkom
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import com.example.mestkom.auth.AuthActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -13,19 +16,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
-        val goreg: Button = findViewById(R.id.goreg)
-        val gologin: Button = findViewById(R.id.gologin)
-
-        goreg.setOnClickListener({
-            val intent = Intent(this, activity_register::class.java)
-            startActivity(intent)
-        })
-
-        gologin.setOnClickListener({
-            val intent = Intent(this, activity_login::class.java)
-            startActivity(intent)
-        })
-
+        finish()
+        startActivity(Intent(this, AuthActivity::class.java))
 
     }
 }

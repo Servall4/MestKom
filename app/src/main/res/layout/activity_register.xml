@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_register">
+    tools:context=".auth.activity_register">
 
     <View
         android:id="@+id/rectangle1"
@@ -55,7 +55,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rectangle2"
-        app:srcCompat="@drawable/lotus" />
+        app:srcCompat="@drawable/logo" />
 
 
     <TextView
