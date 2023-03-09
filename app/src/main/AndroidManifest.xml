@@ -15,7 +15,7 @@
         android:theme="@style/Theme.MestKom"
         tools:targetApi="31">
         <activity
-            android:name=".auth.AuthActivity"
+            android:name=".ui.auth.AuthActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -29,7 +29,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".auth.activity_register"
+            android:name=".ui.auth.activity_register"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

@@ -1,4 +1,4 @@
-package com.example.mestkom.auth
+package com.example.mestkom.ui.auth
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

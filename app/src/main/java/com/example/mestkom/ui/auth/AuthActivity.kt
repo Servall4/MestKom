@@ -1,4 +1,4 @@
-package com.example.mestkom.auth
+package com.example.mestkom.ui.auth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

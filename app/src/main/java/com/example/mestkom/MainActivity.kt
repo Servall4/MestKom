@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import com.example.mestkom.auth.AuthActivity
+import com.example.mestkom.ui.auth.AuthActivity
 
 
 class MainActivity : AppCompatActivity() {
