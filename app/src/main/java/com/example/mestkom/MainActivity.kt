@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
+import com.example.mestkom.data.UserPreferences
 import com.example.mestkom.ui.auth.AuthActivity
 
 
@@ -16,8 +20,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
-        finish()
-        startActivity(Intent(this, AuthActivity::class.java))
+        val userPreferences = UserPreferences(this)
 
+
+        userPreferences.authToken.asLiveData().observe(this, Observer {
+            Toast.makeText(this, it ?: "Token is NULL", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, AuthActivity::class.java))
+        })
     }
 }

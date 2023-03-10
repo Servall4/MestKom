@@ -1,61 +1,82 @@
 package com.example.mestkom.ui.auth
 
 import android.os.Bundle
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import com.example.mestkom.R
+import com.example.mestkom.data.network.AuthApi
+import com.example.mestkom.data.network.Resource
+import com.example.mestkom.data.repository.AuthRepository
+import com.example.mestkom.databinding.FragmentLoginBinding
+import com.example.mestkom.databinding.FragmentRegisterBinding
+import com.example.mestkom.ui.base.BaseFragment
+import com.example.mestkom.ui.enable
+import com.example.mestkom.ui.handleApiError
+import com.example.mestkom.ui.home.HomeActivity
+import com.example.mestkom.ui.startNewActivity
+import com.example.mestkom.ui.visible
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RegisterFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class RegisterFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, AuthRepository>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
+        binding.progressBar3.visible(false)
+        binding.loginbtn.enable(false)
+
+        viewModel.registerResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            binding.progressBar3.visible(it is Resource.Loading)
+            when(it) {
+                is Resource.Success -> {
+                    lifecycleScope.launch {
+                        viewModel.saveAuthToken(it.value.user.salt!!)
+                        requireActivity().startNewActivity(HomeActivity::class.java)
+                    }
+                }
+
+                is Resource.Failure -> handleApiError(it) { register() }
+
+                is Resource.Loading -> {
+                    binding.progressBar3.visible(true)
+                }
+            }
+        })
+
+        binding.email.addTextChangedListener {
+            val username = binding.login.text.toString().trim()
+            val password = binding.password.text.toString().trim()
+            val confirmPassword = binding.confirmpassword.text.toString().trim()
+            val email = binding.email.text.toString().trim()
+
+            binding.loginbtn.enable(username.matches(Regex("^(?=.*[A-Za-z0-9]\$)[A-Za-z][A-Za-z\\d.-]{0,19}\$")) && password == confirmPassword && Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        }
+
+        binding.loginbtn.setOnClickListener {
+            register()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false)
+    private fun register() {
+        val username = binding.login.text.toString().trim()
+        val password = binding.password.text.toString().trim()
+        val email = binding.email.text.toString().trim()
+
+        viewModel.register(username, password, email)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RegisterFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RegisterFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+    override fun getViewModel() = AuthViewModel::class.java
+
+    override fun getFragmentBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = FragmentRegisterBinding.inflate(inflater, container, false)
+
+    override fun getFragmentRepository() =  AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences )
 }

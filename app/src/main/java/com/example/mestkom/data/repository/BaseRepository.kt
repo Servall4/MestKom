@@ -1,6 +1,7 @@
-package com.example.mestkom.repository
+package com.example.mestkom.data.repository
 
-import com.example.mestkom.network.Resource
+import com.example.mestkom.data.network.Resource
+import com.example.mestkom.data.network.UserApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -25,5 +26,9 @@ abstract class BaseRepository {
                 }
             }
         }
+    }
+
+    suspend fun logout(api: UserApi) = safeApiCall {
+        api.logout()
     }
 }

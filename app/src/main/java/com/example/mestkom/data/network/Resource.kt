@@ -1,4 +1,4 @@
-package com.example.mestkom.network
+package com.example.mestkom.data.network
 
 import okhttp3.ResponseBody
 import okhttp3.internal.http2.ErrorCode
@@ -12,4 +12,5 @@ sealed class Resource<out T> {
         val errorCode: Int?,
         val errorBody: ResponseBody?
     ) : Resource<Nothing>()
+    object Loading : Resource<Nothing>()
 }

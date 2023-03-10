@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.example.mestkom'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.mestkom"
@@ -74,6 +74,13 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
 
-    implementation "androidx.preference:preference-ktx:1.2.0"
+    //Login interceptor
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+
+    //DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore:1.0.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.0"
 
 }
