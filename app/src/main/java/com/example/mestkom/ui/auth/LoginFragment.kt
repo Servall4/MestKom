@@ -82,6 +82,6 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
         container: ViewGroup?
     ) = FragmentLoginBinding.inflate(inflater, container, false)
 
-    override fun getFragmentRepository() =  AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences )
+    override fun getFragmentRepository() =  AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
 
 }
