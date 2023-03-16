@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import com.example.mestkom.data.UserPreferences
 import com.example.mestkom.ui.auth.AuthActivity
+import com.example.mestkom.ui.home.HomeActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         userPreferences.authToken.asLiveData().observe(this, Observer {
             Toast.makeText(this, it ?: "Token is NULL", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, AuthActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
         })
     }
 }

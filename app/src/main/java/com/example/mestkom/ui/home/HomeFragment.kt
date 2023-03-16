@@ -12,14 +12,27 @@ import com.example.mestkom.data.responses.User
 import com.example.mestkom.databinding.FragmentHomeBinding
 import com.example.mestkom.ui.base.BaseFragment
 import com.example.mestkom.ui.visible
+import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.mapview.MapView
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, UserRepository>() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    lateinit var mapView: MapView
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mapView = binding.mapview
+        mapView.map.move(
+            CameraPosition(Point(64.538371, 40.512726), 0f, 0.0f, 0.0f),
+            Animation(Animation.Type.SMOOTH, 300f), null)
+        mapView.onStart()
+        MapKitFactory.getInstance().onStart()
+        super.onViewCreated(view, savedInstanceState)
+        /*
         binding.progressBar2.visible(false)
 
 
@@ -44,13 +57,13 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, UserReposi
         binding.logout.setOnClickListener{
             logout()
         }
+        */
     }
-
     private fun updateUi(user: User) {
         with(binding) {
-            textViewUsername.text = user.username
+           /* textViewUsername.text = user.username
             textViewId.text = user.id.toString()
-            textViewEmail.text = user.email
+            textViewEmail.text = user.email*/
 
         }
     }
