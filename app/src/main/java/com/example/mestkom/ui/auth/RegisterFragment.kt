@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import com.example.mestkom.R
 import com.example.mestkom.data.network.AuthApi
@@ -36,8 +38,9 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Au
             when(it) {
                 is Resource.Success -> {
                     lifecycleScope.launch {
-                        viewModel.saveAuthToken(it.value.user.salt!!)
-                        requireActivity().startNewActivity(HomeActivity::class.java)
+                        val transaction: FragmentTransaction? =
+                            fragmentManager?.beginTransaction()
+                        transaction?.replace(R.id.fragmentContainerView, LoginFragment())?.commit()
                     }
                 }
 
@@ -54,6 +57,23 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Au
             val password = binding.password.text.toString().trim()
             val confirmPassword = binding.confirmpassword.text.toString().trim()
             val email = binding.email.text.toString().trim()
+
+            if (!username.matches(Regex("^(?=.*[A-Za-z0-9]\$)[A-Za-z][A-Za-z\\d.-]{0,19}\$")))
+                binding.loginerr.isVisible = true
+            else
+                binding.loginerr.isVisible = false
+
+            if (password != confirmPassword)
+                binding.samepassworderr.isVisible = true
+            else
+                binding.samepassworderr.isVisible = false
+
+            if (password.length < 8)
+                binding.passwordlength.isVisible = true
+            else
+
+            if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                binding.emailerr.isVisible = true
 
             binding.loginbtn.enable(username.matches(Regex("^(?=.*[A-Za-z0-9]\$)[A-Za-z][A-Za-z\\d.-]{0,19}\$")) && password == confirmPassword && Patterns.EMAIL_ADDRESS.matcher(email).matches())
         }

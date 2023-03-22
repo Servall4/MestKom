@@ -27,7 +27,6 @@ import java.util.Observer
 import kotlin.math.log
 
 class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepository>() {
-    private lateinit var navController: NavController
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -40,7 +39,7 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
             when(it) {
                 is Resource.Success -> {
                     lifecycleScope.launch {
-                        viewModel.saveAuthToken(it.value.user.salt!!)
+                        viewModel.saveAuthToken(it.value.token!!)
                         requireActivity().startNewActivity(HomeActivity::class.java)
                     }
                 }

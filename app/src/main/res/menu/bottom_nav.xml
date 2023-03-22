@@ -2,19 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Map"
+        android:title="Home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/map_icon" />
     <item
         android:title="Notifications"
+        android:id="@+id/notificationFragment"
         android:icon="@drawable/bell_icon"/>
     <item
         android:title="Upload"
+        android:id="@+id/uploadFragment"
         android:icon="@drawable/upload_icon"/>
     <item
         android:title="Video"
+        android:id="@+id/videoFragment"
         android:icon="@drawable/video_icon"/>
     <item
         android:title="Profile"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/profile_icon"/>
 
 </menu>
