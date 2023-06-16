@@ -4,20 +4,20 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
-        android:strokeColor="#FF33363F"
+        android:strokeColor="@color/buttonColor"
         android:strokeWidth="2"
         android:strokeLineCap="round"
         android:pathData="M3 6.2c0-1.12 0-1.68 0.22-2.1 0.19-0.38 0.5-0.69 0.87-0.88C4.52 3 5.08 3 6.2 3h11.6c1.12 0 1.68 0 2.1 0.22 0.38 0.19 0.69 0.5 0.88 0.87C21 4.52 21 5.08 21 6.2v11.6c0 1.12 0 1.68-0.22 2.1-0.19 0.38-0.5 0.69-0.87 0.88C19.48 21 18.92 21 17.8 21H6.2c-1.12 0-1.68 0-2.1-0.22-0.38-0.19-0.69-0.5-0.88-0.87C3 19.48 3 18.92 3 17.8V6.2Z"/>
     <path
-        android:strokeColor="#FF33363F"
+        android:strokeColor="@color/buttonColor"
         android:strokeWidth="2"
         android:pathData="M19 21L15 6.5"/>
     <path
-        android:strokeColor="#FF33363F"
+        android:strokeColor="@color/buttonColor"
         android:strokeWidth="2"
         android:pathData="M21 6L3 8"/>
     <path
-        android:strokeColor="#FF33363F"
+        android:strokeColor="@color/buttonColor"
         android:strokeWidth="2"
         android:pathData="M13 14.09c0 1.84-1.74 3.14-2.57 3.66-0.27 0.17-0.6 0.17-0.86 0C8.74 17.23 7 15.93 7 14.1 7 12.24 8.45 11 10 11c1.6 0 3 1.24 3 3.09Z"/>
 </vector>

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mestkom.data.network.UserApi
-import com.example.mestkom.data.repository.BaseRepository
+import com.example.mestkom.ui.repository.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

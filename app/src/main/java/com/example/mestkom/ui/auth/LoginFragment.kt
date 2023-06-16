@@ -3,66 +3,70 @@ package com.example.mestkom.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.mestkom.R
+import com.example.mestkom.data.PreferencesManager
+import com.example.mestkom.data.map.LocationCommunication
 import com.example.mestkom.databinding.FragmentLoginBinding
 import com.example.mestkom.data.network.AuthApi
 import com.example.mestkom.data.network.Resource
-import com.example.mestkom.data.repository.AuthRepository
+import com.example.mestkom.ui.repository.AuthRepository
 import com.example.mestkom.ui.base.BaseFragment
 import com.example.mestkom.ui.enable
 import com.example.mestkom.ui.handleApiError
 import com.example.mestkom.ui.home.HomeActivity
+import com.example.mestkom.ui.repository.BaseRepository
 import com.example.mestkom.ui.startNewActivity
 import com.example.mestkom.ui.visible
 import kotlinx.coroutines.launch
-import java.util.Observer
-import kotlin.math.log
 
-class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepository>() {
+class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<BaseRepository>>() {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private val args: LoginFragmentArgs by navArgs()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (!args.username.isNullOrBlank())
+            binding.login.setText(args.username)
+        binding.signInButton.enable(false)
+        binding.progressBar.visible(false)
 
-        binding.progressBar.visible( false)
-        binding.loginbtn.enable(false)
-
-        viewModel.loginResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.loginResponse.observe(viewLifecycleOwner) {
             binding.progressBar.visible(it is Resource.Loading)
             when(it) {
                 is Resource.Success -> {
                     lifecycleScope.launch {
-                        viewModel.saveAuthToken(it.value.token!!)
+                        viewModel.saveAuthToken(it.value.token)
+                        viewModel.saveUserId(it.value.id)
                         requireActivity().startNewActivity(HomeActivity::class.java)
                     }
                 }
-                is Resource.Failure -> handleApiError(it) { login() }
-
+                is Resource.Failure -> handleApiError(it)
                 is Resource.Loading -> {
                     binding.progressBar.visible(true)
                 }
             }
-        })
+        }
 
         binding.password.addTextChangedListener{
             val username = binding.login.text.toString().trim()
-            binding.loginbtn.enable(username.isNotEmpty() && it.toString().isNotEmpty())
+            binding.signInButton.enable(username.isNotEmpty() && it.toString().isNotEmpty())
         }
-        binding.loginbtn.setOnClickListener {
+        binding.signInButton.setOnClickListener {
             login()
         }
 
-        binding.registerbtn.setOnClickListener {
-            val transaction: FragmentTransaction? =
-                fragmentManager?.beginTransaction()
-            transaction?.replace(R.id.fragmentContainerView, RegisterFragment())?.commit()
+        binding.signUpButton.setOnClickListener {
+            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
         }
     }
 
@@ -70,8 +74,20 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
         val username = binding.login.text.toString().trim()
         val password = binding.password.text.toString().trim()
 
-        //@todo add input validations
-        viewModel.login(username, password)
+        val validate = viewModel.validateLoginInput(username, password)
+        val errors = mutableListOf(binding.loginError, binding.passwordError)
+        if (validate.contains(false)) {
+            validate.forEachIndexed { index, b ->
+                if (!b) {
+                    errors[index].isVisible = true
+                }
+            }
+        } else {
+            errors.forEach{
+                it.isVisible = false
+            }
+            viewModel.login(username, password)
+        }
     }
 
     override fun getViewModel() = AuthViewModel::class.java
@@ -81,6 +97,6 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
         container: ViewGroup?
     ) = FragmentLoginBinding.inflate(inflater, container, false)
 
-    override fun getFragmentRepository() =  AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
+    override fun getFragmentRepository() =  listOf(AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences))
 
 }

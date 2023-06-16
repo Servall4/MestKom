@@ -1,37 +1,1 @@
-package com.example.mestkom.ui.home
-
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.mestkom.R
-import com.example.mestkom.data.repository.UserRepository
-import com.example.mestkom.databinding.FragmentHomeBinding
-import com.example.mestkom.ui.base.BaseFragment
-import com.example.mestkom.ui.base.BaseScreen
-
-class UploadFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, UserRepository>() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_upload, container, false)
-    }
-
-    override fun getViewModel(): Class<HomeViewModel> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ): FragmentHomeBinding {
-        TODO("Not yet implemented")
-    }
-
-    override fun getFragmentRepository(): UserRepository {
-        TODO("Not yet implemented")
-    }
-}
+package com.example.mestkom.ui.homeimport android.app.Activityimport android.content.Contextimport android.content.Intentimport android.database.Cursorimport android.net.Uriimport android.os.Bundleimport android.provider.MediaStoreimport android.util.Logimport android.view.LayoutInflaterimport android.view.Viewimport android.view.ViewGroupimport android.widget.Toastimport androidx.activity.result.contract.ActivityResultContractsimport androidx.core.view.childrenimport androidx.core.view.isVisibleimport androidx.lifecycle.asLiveDataimport androidx.lifecycle.lifecycleScopeimport androidx.navigation.fragment.findNavControllerimport com.example.mestkom.camera.CameraActivityimport com.example.mestkom.data.PreferencesManagerimport com.example.mestkom.data.network.FileApiimport com.example.mestkom.data.network.Resourceimport com.example.mestkom.data.network.UserApiimport com.example.mestkom.ui.repository.UserRepositoryimport com.example.mestkom.databinding.FragmentUploadBindingimport com.example.mestkom.ui.base.BaseFragmentimport com.example.mestkom.ui.enableimport com.example.mestkom.ui.handleApiErrorimport com.example.mestkom.ui.repository.BaseRepositoryimport com.example.mestkom.ui.repository.FileRepositoryimport com.example.mestkom.ui.visibleimport com.yandex.mapkit.Animationimport com.yandex.mapkit.geometry.Pointimport com.yandex.mapkit.map.CameraPositionimport kotlinx.coroutines.flow.firstimport kotlinx.coroutines.launchimport kotlinx.coroutines.runBlockingimport java.io.Fileimport java.lang.RuntimeExceptionclass UploadFragment : BaseFragment<HomeViewModel, FragmentUploadBinding, List<BaseRepository>>() {    private val launcher =        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->            if (result.resultCode == Activity.RESULT_OK) {                val data = result.data                val videoUriString = data?.getStringExtra("VIDEO_URI")                val videoUri = Uri.parse(videoUriString)                if (videoUriString != null) {                    binding.videoView.setVideoURI(videoUri)                    binding.videoView.start()                    binding.uploadButton.setOnClickListener {                        viewModel.user.observe(this){                            when(it) {                                is Resource.Success -> {                                    binding.uploadButton.isVisible = false                                    sendVideo(viewModel.createImageFileAndroidQ(requireContext(), videoUri)!!, binding.name.text.toString(),                                        binding.description.text.toString(),                                        it.value.id,)                                }                                is Resource.Failure -> {                                    handleApiError(it)                                }                                else -> {}                            }                        }                        }                }            } else if (result.resultCode == Activity.RESULT_CANCELED) {                findNavController().navigate(UploadFragmentDirections.actionUploadFragmentToHomeFragment())            }        }    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {        super.onViewCreated(view, savedInstanceState)        binding.uploadButton.isVisible = true        viewModel.user.observe(viewLifecycleOwner) {            when(it) {                is Resource.Failure -> logout()                else -> {                }            }        }        viewModel.getUser(requireContext())        binding.videoView.setOnClickListener {            binding.videoView.stopPlayback()        }        viewModel.uploadResponse.observe(viewLifecycleOwner) {            when(it) {                is Resource.Success -> {                    Toast.makeText(context, "Video successfully loaded!", Toast.LENGTH_LONG).show()                    findNavController().navigate(UploadFragmentDirections.actionUploadFragmentToHomeFragment())                }                is Resource.Failure -> {                    Toast.makeText(context, "Error, video Isn't loaded: ${it.errorBody.toString()}, code: ${it.errorCode.toString()}", Toast.LENGTH_LONG).show()                }                is Resource.Loading -> {                    Toast.makeText(context, "Be patient, video is loading", Toast.LENGTH_LONG).show()                }            }        }        val intent = Intent(activity, CameraActivity::class.java)        launcher.launch(intent)    }    override fun getViewModel() = HomeViewModel::class.java    override fun getFragmentBinding(        inflater: LayoutInflater,        container: ViewGroup?    ) = FragmentUploadBinding.inflate(inflater, container, false)    override fun getFragmentRepository(): List<BaseRepository> {        val api = remoteDataSource.buildApi(UserApi::class.java)        val fileApi = remoteDataSource.buildApi(FileApi::class.java)        return listOf(UserRepository(api), FileRepository(fileApi))    }    private fun sendVideo(file: File, name: String, description: String, id: String) {        viewModel.uploadVideo(file, name, description, id, PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))    }}

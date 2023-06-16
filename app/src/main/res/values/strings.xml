@@ -1,34 +1,44 @@
 <resources>
-    <string name="app_name">MestKom</string>
-    <string name="login">Вход</string>
-    <string name="register">Регистрация</string>
-    <string name="goregister">Зарегистрируйтесь</string>
+    <string name="app_name">МестКом</string>
+
+    <!-- Strings related to auth -->
+    <string name="signIn">Вход</string>
+    <string name="signUp">Регистрация</string>
     <string name="or">или</string>
     <string name="username">Логин</string>
     <string name="password">Пароль</string>
-    <string name="password2">Подтверждение пароля</string>
+    <string name="passwordConfirm">Подтверждение пароля</string>
     <string name="email">Электронная почта</string>
     <string name="map">Карта</string>
     <string name="home">Дом</string>
     <string name="settings">Настройки</string>
     <string name="notifications">Уведомления</string>
     <string name="about">О программе</string>
-    <string name="loginerr">Неверный логин</string>
-    <string name="passwerr">Неверный пароль</string>
-    <string name="samepasswerr">Пароли отличаются</string>
-    <string name="passwordlength">Пароль должен содержать хотя бы 8 символов</string>
-    <string name="emailerr">Неверная электронная почта</string>
-    <string name="forgotpassw">Забыли пароль?</string>
+    <string name="loginError">Неверный логин</string>
+    <string name="passwordError">Неверный пароль</string>
+    <string name="samePasswordError">Пароли отличаются</string>
+    <string name="passwordLengthError">Пароль должен содержать хотя бы 8 символов</string>
+    <string name="emailError">Неверная электронная почта</string>
+    <string name="forgotPasswordBtn">Забыли пароль?</string>
     <string name="error">Ошибка</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Пароль</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Strings related to camera -->
+    <string name="stop_capture">Остановить запись</string>
+    <string name="start_capture">Начать запись</string>
+
+    <!-- Strings related to upload fragment -->
+    <string name="video_name">Название видео:</string>
+    <string name="description">Придумайте описание:</string>
+
+    <!-- Strings related to profile fragment -->
+    <string name="welcome">Добро пожаловать, %1$s!</string>
+    <string name="date">Вы были зарегистрированы: %1$s</string>
+    <string name="near">Недалеко от вас:</string>
+
+    <!-- Strings related to info fragment -->
+    <string name="developers">Угрюмов Иван Алексеевич \nБуторин Руслан Михайлович \nГруппа:351012</string>
+
+    <!-- Strings related to video view activity -->
+    <string name="videoName">Название</string>
+    <string name="videoDescription">Описание</string>
 </resources>

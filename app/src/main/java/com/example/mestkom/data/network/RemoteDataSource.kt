@@ -9,17 +9,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RemoteDataSource {
     companion object {
-        private const val BASE_URL = "http://25.20.188.5:8080/"
+        const val BASE_URL = "http://5.142.71.59:8080/"
     }
 
     fun<Api> buildApi(
-        api: Class<Api>,
-        authToken: String? = null
+        api: Class<Api>
     ): Api {
         return Retrofit.Builder().baseUrl(BASE_URL).client(OkHttpClient.Builder().addInterceptor{ chain ->  
-            chain.proceed(chain.request().newBuilder().also {
-                it.addHeader("Authorization", "Bearer $authToken")
-            }.build())
+            chain.proceed(chain.request().newBuilder().build())
         }.also { client ->
             if (BuildConfig.DEBUG) {
                 val logging = HttpLoggingInterceptor()

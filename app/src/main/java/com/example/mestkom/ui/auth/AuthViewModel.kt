@@ -1,13 +1,10 @@
 package com.example.mestkom.ui.auth
 
-import android.app.usage.UsageEvents
-import android.media.metrics.Event
-import android.util.EventLog
+import android.util.Patterns
 import androidx.lifecycle.*
 import com.example.mestkom.data.network.Resource
-import com.example.mestkom.data.repository.AuthRepository
-import com.example.mestkom.data.responses.LoginResponse
-import com.example.mestkom.data.responses.RegisterResponse
+import com.example.mestkom.ui.repository.AuthRepository
+import com.example.mestkom.data.responses.AuthResponse
 import com.example.mestkom.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -15,13 +12,11 @@ class AuthViewModel(
     private val repository: AuthRepository
 ): BaseViewModel(repository) {
 
-    private val _loginResponse: MutableLiveData<Resource<LoginResponse>> = MutableLiveData()
-    val loginResponse: LiveData<Resource<LoginResponse>>
-        get() = _loginResponse
+    private val _loginResponse: MutableLiveData<Resource<AuthResponse>> = MutableLiveData()
+    val loginResponse: LiveData<Resource<AuthResponse>> = _loginResponse
 
-    private val _registerResponse: MutableLiveData<Resource<RegisterResponse>> = MutableLiveData()
-    val registerResponse: LiveData<Resource<RegisterResponse>>
-        get() = _registerResponse
+    private val _registerResponse: MutableLiveData<Resource<AuthResponse>> = MutableLiveData()
+    val registerResponse: LiveData<Resource<AuthResponse>> = _registerResponse
 
     fun login(
         username: String,
@@ -40,7 +35,34 @@ class AuthViewModel(
         _registerResponse.value = repository.register(username, password, email)
     }
 
+    fun validateLoginInput(
+        username: String,
+        password: String
+    ): List<Boolean> {
+        val list = mutableListOf<Boolean>()
+        list.add(password.length >= 8)
+        list.add(username.matches(Regex("^(?=.*[A-Za-z0-9]\$)[A-Za-z][A-Za-z\\d.-]{0,19}\$")))
+        return list
+    }
+
+    fun validateRegisterInput(
+        username: String,
+        password: String,
+        passwordCorrect: String,
+        email: String
+    ): List<Boolean>? {
+        val list = mutableListOf<Boolean>()
+        list.add(username.matches(Regex("^(?=.*[A-Za-z0-9]\$)[A-Za-z][A-Za-z\\d.-]{0,19}\$")))
+        list.add(password.length >= 8)
+        list.add(passwordCorrect == password)
+        list.add(Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        return list
+    }
     suspend fun saveAuthToken(token: String) {
         repository.saveAuthToken(token)
+    }
+
+    suspend fun saveUserId(id: String) {
+        repository.saveUserId(id)
     }
 }

@@ -1,25 +1,20 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="92dp"
-    android:height="92dp"
-    android:viewportWidth="92"
-    android:viewportHeight="92">
-    <group>
-        <path
-            android:fillColor="#FF000000"
-            android:pathData="M18.94 58.88c-8.98-8.98-8.98-23.55 0-32.53l10.09-10.08c8.98-8.98 23.55-8.98 32.52 0l11.3 11.29c8.98 8.98 8.98 23.55 0 32.53l-10.09 10.08c-8.98 8.98-23.55 8.98-32.53 0z"/>
-    </group>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
     <path
-        android:strokeColor="#FF33363F"
+        android:strokeColor="@color/buttonColor"
         android:strokeWidth="2"
-        android:pathData="M46 34A9 9 0 1 0 46 52 9 9 0 1 0 46 34z"/>
+        android:pathData="M12 3A9 9 0 1 0 12 21 9 9 0 1 0 12 3z"/>
     <path
-        android:strokeColor="#FF33363F"
+        android:strokeColor="@color/buttonColor"
         android:strokeWidth="2"
         android:strokeLineCap="square"
-        android:pathData="M46 46v-6"/>
+        android:pathData="M12 15V9"/>
     <path
-        android:strokeColor="#FF33363F"
+        android:strokeColor="@color/buttonColor"
         android:strokeWidth="2"
         android:strokeLineCap="square"
-        android:pathData="M49 43h-6"/>
+        android:pathData="M15 12H9"/>
 </vector>

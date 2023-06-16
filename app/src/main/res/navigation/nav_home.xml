@@ -11,23 +11,35 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/notificationFragment"
-        android:name="com.example.mestkom.ui.home.NotificationFragment"
-        android:label="fragment_notification"
-        tools:layout="@layout/fragment_notification" />
-    <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.mestkom.ui.home.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
-    <fragment
-        android:id="@+id/videoFragment"
-        android:name="com.example.mestkom.ui.home.VideoFragment"
-        android:label="fragment_video"
-        tools:layout="@layout/fragment_video" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_infoFragment"
+            app:destination="@id/infoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+    </fragment>
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.example.mestkom.ui.home.UploadFragment"
         android:label="fragment_upload"
-        tools:layout="@layout/fragment_upload" />
+        tools:layout="@layout/fragment_upload" >
+        <action
+            android:id="@+id/action_uploadFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/scale_down"/>
+    </fragment>
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.example.mestkom.ui.home.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" >
+        <action
+            android:id="@+id/action_infoFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"/>
+    </fragment>
 </navigation>

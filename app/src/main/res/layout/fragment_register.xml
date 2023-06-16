@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.auth.activity_register">
 
-
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="200dp"
@@ -22,7 +21,7 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/app_icon" />
 
         <TextView
             android:id="@+id/some_id"
@@ -31,7 +30,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:gravity="center_horizontal|top|center_vertical"
-            android:text="@string/register"
+            android:text="@string/signUp"
             android:textAlignment="gravity"
             android:textAppearance="@style/some_id"
             android:textStyle="bold"
@@ -45,14 +44,14 @@
             android:layout_width="309dp"
             android:layout_height="48dp"
             android:layout_marginTop="48dp"
-            android:background="@drawable/id_google"
+            android:background="@drawable/textedit_field_google_style"
             android:fontFamily="@font/helvetica"
             android:gravity="center_vertical"
             android:hint="@string/username"
             android:lines="1"
             android:paddingLeft="20dp"
             android:textAlignment="gravity"
-            android:textColor="@color/black"
+            android:textColor="@color/textColor"
             android:textIsSelectable="true"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,11 +59,11 @@
             app:layout_constraintTop_toBottomOf="@+id/some_id" />
 
         <TextView
-            android:id="@+id/loginerr"
+            android:id="@+id/loginError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="52dp"
-            android:text="@string/loginerr"
+            android:text="@string/loginError"
             android:textColor="#E53935"
             android:textSize="12sp"
             android:visibility="invisible"
@@ -76,27 +75,27 @@
             android:layout_width="309dp"
             android:layout_height="48dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/id_google"
+            android:background="@drawable/textedit_field_google_style"
             android:fontFamily="@font/helvetica"
             android:gravity="center_vertical"
             android:hint="@string/password"
             android:lines="1"
             android:paddingLeft="20dp"
-            android:password="true"
+            android:inputType="textPassword"
             android:textAlignment="gravity"
-            android:textColor="@color/black"
-            android:textIsSelectable="true"
+            android:textColor="@color/textColor"
+            android:textIsSelectable="false"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login" />
 
         <TextView
-            android:id="@+id/passwordlength"
+            android:id="@+id/passwordLengthError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="52dp"
-            android:text="@string/passwordlength"
+            android:text="@string/passwordLengthError"
             android:textColor="#E53935"
             android:textSize="12sp"
             android:visibility="invisible"
@@ -104,32 +103,32 @@
             app:layout_constraintTop_toBottomOf="@+id/password" />
 
         <TextView
-            android:id="@+id/samepassworderr"
+            android:id="@+id/samePasswordsError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="52dp"
-            android:text="@string/samepasswerr"
+            android:text="@string/samePasswordError"
             android:textColor="#E53935"
             android:textSize="12sp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/confirmpassword" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordConfirm" />
 
         <EditText
-            android:id="@+id/confirmpassword"
+            android:id="@+id/passwordConfirm"
             android:layout_width="309dp"
             android:layout_height="48dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/id_google"
+            android:background="@drawable/textedit_field_google_style"
             android:fontFamily="@font/helvetica"
             android:gravity="center_vertical"
-            android:hint="@string/password2"
+            android:hint="@string/passwordConfirm"
             android:lines="1"
             android:paddingLeft="20dp"
-            android:password="true"
+            android:inputType="textPassword"
             android:textAlignment="gravity"
-            android:textColor="@color/black"
-            android:textIsSelectable="true"
+            android:textColor="@color/textColor"
+            android:textIsSelectable="false"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -140,26 +139,26 @@
             android:layout_width="309dp"
             android:layout_height="48dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/id_google"
+            android:background="@drawable/textedit_field_google_style"
             android:fontFamily="@font/helvetica"
             android:gravity="center_vertical"
             android:hint="@string/email"
             android:lines="1"
             android:paddingLeft="20dp"
             android:textAlignment="gravity"
-            android:textColor="@color/black"
+            android:textColor="@color/textColor"
             android:textIsSelectable="true"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/confirmpassword" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordConfirm" />
 
         <TextView
-            android:id="@+id/emailerr"
+            android:id="@+id/emailError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="52dp"
-            android:text="@string/emailerr"
+            android:text="@string/emailError"
             android:textColor="#E53935"
             android:textSize="12sp"
             android:visibility="invisible"
@@ -167,27 +166,37 @@
             app:layout_constraintTop_toBottomOf="@+id/email" />
 
         <ImageButton
-            android:id="@+id/loginbtn"
+            android:id="@+id/signInButton"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginBottom="48dp"
-            android:background="@drawable/right_arrow2"
+            android:background="@drawable/auth_button"
             android:onClick="createAccount"
             android:text="go"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailerr" />
+            app:layout_constraintTop_toBottomOf="@+id/emailError" />
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/back_button_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/progressBar3"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/loginbtn"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailerr" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
