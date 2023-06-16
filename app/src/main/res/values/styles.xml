@@ -1,0 +1,21 @@
+<resources>
+    <style name="customfontstyle" parent="@android:style/TextAppearance.Small">
+        <item name="android:fontFamily">@font/helvetica
+        </item>
+    </style>
+
+    <style name="some_id">
+        <item name="android:textSize">48sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="button" parent="Theme.AppCompat.DayNight">
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="or">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+</resources>
