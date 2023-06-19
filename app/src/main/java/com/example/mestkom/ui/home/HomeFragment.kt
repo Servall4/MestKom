@@ -73,8 +73,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
             Animation(Animation.Type.SMOOTH, 1.5F), null
         )
         val videos = ArrayList<PlacemarkUserData>()
-        it.placemarks.forEach {
-            val userData = it.userData as PlacemarkUserData
+        it.placemarks.forEach { placemark ->
+            val userData = placemark.userData as PlacemarkUserData
             videos.add(userData)
         }
         val intent = Intent(context, VideoActivity::class.java)
@@ -145,6 +145,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
             )
         }
 
+        viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
+
         binding.findMeButton.setOnClickListener {
             viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
         }
@@ -176,8 +178,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        val currentNightMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        when (currentNightMode) {
+        when (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.mapview.map.isNightModeEnabled = false
             }

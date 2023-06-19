@@ -71,6 +71,7 @@
             android:name=".ui.video.VideoActivity"
             android:exported="false"
             android:theme="@style/Theme.MestKom"
+            android:screenOrientation="portrait"
             android:configChanges="uiMode">
         <meta-data
             android:name="android.app.lib_name"

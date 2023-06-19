@@ -122,4 +122,6 @@ dependencies {
     //Video player
     implementation "androidx.media3:media3-ui:1.0.2"
     implementation "androidx.media3:media3-exoplayer:1.0.2"
+
+    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:0.4.5")
 }

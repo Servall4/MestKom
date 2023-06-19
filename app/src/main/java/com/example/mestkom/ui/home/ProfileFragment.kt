@@ -45,7 +45,7 @@ class ProfileFragment : BaseFragment<HomeViewModel, FragmentProfileBinding, List
 
     private fun updateUI(user: User) {
         binding.greeting.text = getString(R.string.welcome, user.username)
-        binding.registerDate.text = getString(R.string.date, user.date)
+        binding.registerDate.text = getString(R.string.date, user.date.substring(0, 10))
     }
     override fun getViewModel() = HomeViewModel::class.java
 
