@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -37,11 +38,8 @@ class VideoAdapter(
             player.seekTo(0)
             player.setMediaItem(mediaItem)
             player.prepare()
-
-            if (absoluteAdapterPosition == 0) {
-                player.playWhenReady = true
-                player.play()
-            }
+            player.playWhenReady = true
+            player.play()
             videoPreparedListener.onVideoPrepared(PlayerItem(player, absoluteAdapterPosition))
         }
     }
@@ -52,14 +50,14 @@ class VideoAdapter(
     }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        Toast.makeText(context, "Binded ${position}", Toast.LENGTH_LONG).show()
         val model = videos[position]
         holder.binding.videoName.text = model.name
         holder.binding.videoDescription.text = model.description
-        videoLoadListener.onLoadVideo(model.idVideo, holder.binding) { response ->
+
+        videoLoadListener.onLoadVideo(model.idVideo, holder.binding, position) { response ->
             holder.preparePlayer(response)
         }
-        viewModel.downloadVideo(model.idVideo)
+        viewModel.downloadVideo(model.idVideo, position)
     }
 
     override fun getItemCount(): Int {
@@ -71,6 +69,6 @@ class VideoAdapter(
     }
 
     interface OnVideoLoadListener {
-        fun onLoadVideo(idVideo: String, listBinding: ListVideoBinding, callback: (String) -> Unit)
+        fun onLoadVideo(idVideo: String, listBinding: ListVideoBinding, position: Int, callback: (String) -> Unit)
     }
 }

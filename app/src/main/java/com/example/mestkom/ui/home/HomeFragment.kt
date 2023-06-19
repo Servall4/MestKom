@@ -23,7 +23,6 @@ import com.example.mestkom.ui.cluster.PlacemarkUserData
 import com.example.mestkom.ui.repository.BaseRepository
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.video.VideoActivity
-import com.google.gson.Gson
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -42,7 +41,7 @@ private const val CLUSTER_RADIUS = 60.0
 private const val CLUSTER_MIN_ZOOM = 15
 
 
-class HomeFragment() : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseRepository>>() {
+class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseRepository>>() {
 
     private val placemarkTapListener = MapObjectTapListener { mapObject, _ ->
         val placemark = mapObject as PlacemarkMapObject
@@ -162,11 +161,6 @@ class HomeFragment() : BaseFragment<HomeViewModel, FragmentHomeBinding, List<Bas
         MapKitFactory.getInstance().onStart()
         binding.mapview.onStart()
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
     override fun getViewModel() = HomeViewModel::class.java
 
     override fun getFragmentBinding(

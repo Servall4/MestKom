@@ -45,9 +45,10 @@ class VideoActivity(): AppCompatActivity() {
                 override fun onLoadVideo(
                     idVideo: String,
                     listBinding: ListVideoBinding,
+                    position: Int,
                     callback: (String) -> Unit
                 ) {
-                        viewModel.downloadResponse.observe(this@VideoActivity) { response ->
+                        viewModel.downloadResponse[position].observe(this@VideoActivity) { response ->
                             listBinding.animationView.visible(response is Resource.Loading)
                             when (response) {
                                 is Resource.Success -> {
@@ -76,9 +77,6 @@ class VideoActivity(): AppCompatActivity() {
         binding.viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                Toast.makeText(applicationContext, "Now on ${position}", Toast.LENGTH_LONG).show()
-
-                //Old method
                 val previousIndex = playerItems.indexOfFirst { it.player.isPlaying }
                 if (previousIndex != -1) {
                     val player = playerItems[previousIndex].player

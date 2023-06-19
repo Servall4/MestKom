@@ -1,6 +1,5 @@
 package com.example.mestkom.ui.home
 
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.constraintlayout.motion.widget.Debug
@@ -10,7 +9,6 @@ import com.example.mestkom.R
 import com.example.mestkom.databinding.ActivityHomeBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.yandex.mapkit.MapKitFactory
 
 lateinit var binding: ActivityHomeBinding
 

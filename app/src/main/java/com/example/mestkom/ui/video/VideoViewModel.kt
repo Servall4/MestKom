@@ -17,14 +17,14 @@ class VideoViewModel(
     private val repository: FileRepository
 ): BaseViewModel(repository) {
 
-    private val _downloadResponse: MutableLiveData<Resource<ResponseBody>> = MutableLiveData()
-    val downloadResponse: LiveData<Resource<ResponseBody>> = _downloadResponse
+    private val _downloadResponse: MutableList<MutableLiveData<Resource<ResponseBody>>> = mutableListOf(MutableLiveData())
+    val downloadResponse: List<LiveData<Resource<ResponseBody>>> = _downloadResponse
 
-    fun downloadVideo(idVideo: String) = viewModelScope.launch {
-        _downloadResponse.value = Resource.Loading
-        _downloadResponse.value = repository.downloadVideo(idVideo)
+    fun downloadVideo(idVideo: String, position: Int) = viewModelScope.launch {
+        _downloadResponse.add(MutableLiveData())
+        _downloadResponse[position].value = Resource.Loading
+        _downloadResponse[position].value = repository.downloadVideo(idVideo)
     }
-
 
     fun saveFile(body: ResponseBody?, pathWhereYouWantToSaveFile: String):String {
         if (body == null)
