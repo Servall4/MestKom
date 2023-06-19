@@ -1,11 +1,13 @@
 package com.example.mestkom.ui.auth
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.FragmentTransaction
@@ -98,5 +100,4 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<Bas
     ) = FragmentLoginBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =  listOf(AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences))
-
 }

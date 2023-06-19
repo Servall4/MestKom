@@ -1,14 +1,12 @@
 package com.example.mestkom.ui.video
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.media3.common.MediaItem
-import androidx.media3.datasource.DataSource
-import androidx.media3.datasource.DataSpec
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mestkom.data.network.FileApi
 import com.example.mestkom.data.network.RemoteDataSource
@@ -18,6 +16,11 @@ import com.example.mestkom.databinding.ListVideoBinding
 import com.example.mestkom.ui.cluster.PlacemarkUserData
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.visible
+import okhttp3.ResponseBody
+import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 class VideoActivity(): AppCompatActivity() {
@@ -41,43 +44,42 @@ class VideoActivity(): AppCompatActivity() {
                     playerItems.add(playerItem)
                 }},
             object : VideoAdapter.OnVideoLoadListener {
-
                 override fun onLoadVideo(
                     idVideo: String,
                     listBinding: ListVideoBinding,
                     callback: (String) -> Unit
                 ) {
-                        viewModel.downloadResponse.observe(this@VideoActivity) { response ->
-                            listBinding.animationView.visible(response is Resource.Loading)
-                            when (response) {
-                                is Resource.Success -> {
-                                        callback(viewModel.saveFile(response.value, applicationContext.filesDir.absolutePath + idVideo))
-                                    }
-
-                                is Resource.Failure -> {
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Failed loading video! Please, check your Internet connection and try again later",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-
-                                is Resource.Loading -> {
-                                    listBinding.animationView.isVisible = true
-                                }
+                    viewModel.downloadResponse.observe(this@VideoActivity) { response ->
+                        listBinding.animationView.visible(response is Resource.Loading)
+                        when (response) {
+                            is Resource.Success -> {
+                                val filepath = viewModel.saveFile(response.value, applicationContext.filesDir.absolutePath + "${idVideo}.mp4")
+                                Toast.makeText(applicationContext, "Got response size: ${response.value.bytes().size}. Saved at ${filepath}", Toast.LENGTH_LONG).show()
+                                callback(filepath)
                             }
+
+                            is Resource.Failure -> {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Failed loading video! Please, check your Internet connection and try again later",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            is Resource.Loading -> {
+                                listBinding.animationView.isVisible = true
+                            }
+                        }
                     }
+                    viewModel.downloadVideo(idVideo)
                 }
-            },
-            viewModel
+            }
         )
 
         binding.viewPager2.adapter = adapter
         binding.viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                Toast.makeText(applicationContext, "Now on ${position}", Toast.LENGTH_LONG).show()
-
                 //Old method
                 val previousIndex = playerItems.indexOfFirst { it.player.isPlaying }
                 if (previousIndex != -1) {
