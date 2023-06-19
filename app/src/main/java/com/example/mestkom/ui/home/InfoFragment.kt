@@ -16,8 +16,6 @@ import com.example.mestkom.ui.base.BaseFragment
 import com.example.mestkom.ui.repository.BaseRepository
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.repository.UserRepository
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 class InfoFragment : BaseFragment<HomeViewModel, FragmentInfoBinding, List<BaseRepository>>() {
 

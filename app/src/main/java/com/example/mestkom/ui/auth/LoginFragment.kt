@@ -1,22 +1,14 @@
 package com.example.mestkom.ui.auth
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.mestkom.R
-import com.example.mestkom.data.PreferencesManager
-import com.example.mestkom.data.map.LocationCommunication
 import com.example.mestkom.databinding.FragmentLoginBinding
 import com.example.mestkom.data.network.AuthApi
 import com.example.mestkom.data.network.Resource
@@ -77,8 +69,8 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<Bas
         val validate = viewModel.validateLoginInput(username, password)
         val errors = mutableListOf(binding.loginError, binding.passwordError)
         if (validate.contains(false)) {
-            validate.forEachIndexed { index, b ->
-                if (!b) {
+            validate.forEachIndexed { index, bool ->
+                if (!bool) {
                     errors[index].isVisible = true
                 }
             }

@@ -4,14 +4,9 @@ import com.example.mestkom.data.network.FileApi
 import com.example.mestkom.data.network.FileRequestModel
 import com.example.mestkom.data.network.VideoRequestModel
 import com.google.gson.Gson
-import okhttp3.MediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 import java.io.File
-import java.io.IOException
 
 class FileRepository(
     private val api: FileApi

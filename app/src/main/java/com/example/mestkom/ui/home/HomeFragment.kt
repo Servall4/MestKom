@@ -69,7 +69,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
 
     private val clusterTapListener = ClusterTapListener {
         binding.mapview.map.move(
-            CameraPosition(Point(it.appearance.geometry.latitude, it.appearance.geometry.longitude), 8.0f, 0.0f, 0.0f),
+            CameraPosition(Point(it.appearance.geometry.latitude, it.appearance.geometry.longitude), 4.0f, 0.0f, 0.0f),
             Animation(Animation.Type.SMOOTH, 1.5F), null
         )
         val videos = ArrayList<PlacemarkUserData>()

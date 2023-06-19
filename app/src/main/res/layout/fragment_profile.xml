@@ -56,28 +56,5 @@
             app:layout_constraintStart_toStartOf="@+id/greeting"
             app:layout_constraintTop_toBottomOf="@+id/greeting" />
 
-        <TextView
-            android:id="@+id/nearText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/near"
-            android:textColor="@color/textColor"
-            android:textStyle="bold"
-            android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="@+id/registerDate"
-            app:layout_constraintTop_toBottomOf="@+id/registerDate" />
-
-        <com.yandex.mapkit.mapview.MapView
-            android:id="@+id/place"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            android:clipToOutline="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/nearText"
-            app:layout_constraintTop_toBottomOf="@+id/nearText" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

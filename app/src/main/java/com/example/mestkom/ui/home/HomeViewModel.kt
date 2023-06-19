@@ -2,12 +2,9 @@ package com.example.mestkom.ui.home
 
 import android.content.ContentResolver
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.os.ParcelFileDescriptor
 import android.provider.OpenableColumns
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.mestkom.data.PreferencesManager
 import com.example.mestkom.data.UserPreferences
@@ -18,15 +15,12 @@ import com.example.mestkom.data.responses.User
 import com.example.mestkom.ui.base.BaseViewModel
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.repository.UserRepository
-import com.yandex.mapkit.map.PlacemarkMapObject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 
 class HomeViewModel(
     private val repository: UserRepository,
@@ -78,7 +72,6 @@ class HomeViewModel(
             val outputStream = FileOutputStream(file)
 
             inputStream.copyTo(outputStream)
-
             file
         }catch (e:Exception) {
             Log.e("LOG","createImageFileAndroidQ Error : $e")

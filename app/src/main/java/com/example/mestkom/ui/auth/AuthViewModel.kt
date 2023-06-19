@@ -50,7 +50,7 @@ class AuthViewModel(
         password: String,
         passwordCorrect: String,
         email: String
-    ): List<Boolean>? {
+    ): List<Boolean> {
         val list = mutableListOf<Boolean>()
         list.add(username.matches(Regex("^(?=.*[A-Za-z0-9]\$)[A-Za-z][A-Za-z\\d.-]{0,19}\$")))
         list.add(password.length >= 8)

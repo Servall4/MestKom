@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
@@ -72,7 +70,7 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Li
 
         val validate = viewModel.validateRegisterInput(username, password, confirmPassword, email)
         val errors = mutableListOf(binding.loginError, binding.passwordLengthError, binding.samePasswordsError, binding.emailError)
-        if (validate!!.contains(false)) {
+        if (validate.contains(false)) {
             validate.forEachIndexed { index, b ->
                 if (!b) {
                     errors[index].isVisible = true

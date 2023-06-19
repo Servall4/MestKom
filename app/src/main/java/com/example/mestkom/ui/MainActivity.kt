@@ -18,7 +18,6 @@ import com.example.mestkom.ui.auth.AuthActivity
 import com.example.mestkom.ui.home.HomeActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.yandex.mapkit.MapKitFactory
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,8 +33,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.isSignIn(applicationContext)
         viewModel.isSignIn.observe(this) {
             val activity = if (it) HomeActivity::class.java else AuthActivity::class.java
-            startNewActivity(HomeActivity::class.java)
-//            startNewActivity(activity)
+            startNewActivity(activity)
             finish()
         }
 

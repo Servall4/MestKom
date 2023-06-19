@@ -2,8 +2,6 @@ package com.example.mestkom.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.mestkom.data.PreferencesManager
-import com.example.mestkom.data.map.LocationCommunication
 import com.example.mestkom.ui.repository.AuthRepository
 import com.example.mestkom.ui.repository.BaseRepository
 import com.example.mestkom.ui.repository.UserRepository
@@ -11,7 +9,6 @@ import com.example.mestkom.ui.auth.AuthViewModel
 import com.example.mestkom.ui.home.HomeViewModel
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.video.VideoViewModel
-import java.io.File
 import kotlin.IllegalArgumentException
 
 @Suppress("UNCHECKED_CAST")

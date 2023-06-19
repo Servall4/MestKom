@@ -1,14 +1,9 @@
 package com.example.mestkom.ui.video
 
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.media3.common.MediaItem
-import androidx.media3.datasource.DataSource
-import androidx.media3.datasource.DataSpec
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mestkom.data.network.FileApi
 import com.example.mestkom.data.network.RemoteDataSource
