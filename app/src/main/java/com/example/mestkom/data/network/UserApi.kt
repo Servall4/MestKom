@@ -12,8 +12,6 @@ interface UserApi {
     suspend fun getUser(
         @Body userRequestModel: UserRequestModel
     ): User
-    @GET("authenticate")
-    suspend fun isAuth(): ResponseBody
 
     @GET("update")
     suspend fun getVideos(): List<UpdateResponse>

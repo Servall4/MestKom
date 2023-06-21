@@ -44,7 +44,10 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<Bas
                     }
                 }
                 is Resource.Failure -> {
-                    Toast.makeText(context, it.errorBody?.string(),Toast.LENGTH_LONG).show()
+                    if (it.errorCode == 409)
+                        Toast.makeText(context, it.errorBody?.string(),Toast.LENGTH_LONG).show()
+                    else
+                        handleApiError(it)
                 }
                 is Resource.Loading -> {
                     binding.progressBar.visible(true)

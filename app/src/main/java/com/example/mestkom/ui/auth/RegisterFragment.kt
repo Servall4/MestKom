@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
@@ -37,7 +38,12 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Li
                         findNavController().navigate(action)
                     }
                 }
-                is Resource.Failure -> handleApiError(it)
+                is Resource.Failure -> {
+                    if (it.errorCode == 409)
+                        Toast.makeText(context, it.errorBody?.string(), Toast.LENGTH_LONG).show()
+                    else
+                        handleApiError(it)
+                }
 
                 is Resource.Loading -> {
                     binding.progressBar3.visible(true)

@@ -1,5 +1,6 @@
 package com.example.mestkom.data.network
 
+import com.example.mestkom.data.responses.CommentResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
@@ -21,6 +22,16 @@ interface FileApi {
     @POST("/getVideo")
     suspend fun downloadVideo(
         @Body fileRequestModel: VideoRequestModel
+    ): ResponseBody
+
+    @POST("/getComments")
+    suspend fun getComments(
+        @Body commentsRequestModel: VideoRequestModel
+    ): List<CommentResponse>
+
+    @POST("/sendComment")
+    suspend fun sendComment(
+        @Body commentsRequestModel: CommentRequestModel
     ): ResponseBody
 }
 

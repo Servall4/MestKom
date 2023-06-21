@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.mestkom.data.network.FileApi
 import com.example.mestkom.data.network.RemoteDataSource
 import com.example.mestkom.data.network.Resource
+import com.example.mestkom.data.responses.CommentResponse
 import com.example.mestkom.databinding.ActivityVideoBinding
 import com.example.mestkom.databinding.ListVideoBinding
 import com.example.mestkom.ui.cluster.PlacemarkUserData
@@ -15,19 +16,21 @@ import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.visible
 
 
-class VideoActivity(): AppCompatActivity() {
+class VideoActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityVideoBinding
     private lateinit var adapter: VideoAdapter
     private lateinit var viewModel: VideoViewModel
     private var videos = ArrayList<PlacemarkUserData>()
     private val playerItems = ArrayList<PlayerItem>()
+    private var username: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         videos = intent.getParcelableArrayListExtra<PlacemarkUserData>("videos") as ArrayList<PlacemarkUserData>
+        username = intent.getStringExtra("username")
         viewModel = VideoViewModel(getRepository())
 
         adapter = VideoAdapter(this, videos,
@@ -63,6 +66,36 @@ class VideoActivity(): AppCompatActivity() {
                                 }
                             }
                     }
+                }
+
+                override fun onLoadComment(
+                    idVideo: String,
+                    position: Int,
+                    listBinding: ListVideoBinding,
+                    callback: (List<CommentResponse>) -> Unit
+                ) {
+                        viewModel.commentResponse[position].observe(this@VideoActivity) { response ->
+                            listBinding.animationView.visible(response is Resource.Loading)
+                            when (response) {
+                                is Resource.Success -> {
+                                    callback(response.value)
+                                }
+
+                                is Resource.Failure -> {
+                                    Toast.makeText(applicationContext, "Can't upload comments for this video! Please, try again later", Toast.LENGTH_LONG).show()
+                                }
+
+                                is Resource.Loading -> {
+                                    listBinding.animationView.isVisible = true
+                                }
+                            }
+                        }
+                }
+            },
+            object : VideoAdapter.OnOpenCommentListener {
+                override fun onOpenComment(comments: List<CommentResponse>, idVideo: String) {
+                    val actionCommentFragment = ActionCommentFragment.newInstance(comments, viewModel, idVideo, username!!)
+                    actionCommentFragment.show(supportFragmentManager, actionCommentFragment.tag)
                 }
             },
             viewModel

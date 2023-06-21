@@ -49,6 +49,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         val userData = placemark.userData as PlacemarkUserData
         val video = arrayListOf(userData)
         intent.putParcelableArrayListExtra("videos", video)
+        getUsername {
+            intent.putExtra("username", it)
+        }
         startActivity(intent)
         true
     }
@@ -79,6 +82,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         }
         val intent = Intent(context, VideoActivity::class.java)
         intent.putParcelableArrayListExtra("videos", videos)
+        getUsername {
+            intent.putExtra("username", it)
+        }
         startActivity(intent)
         true
     }
@@ -150,6 +156,14 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         binding.findMeButton.setOnClickListener {
             viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
         }
+    }
+
+    private fun getUsername(callback: (String) -> Unit) {
+        viewModel.user.observe(viewLifecycleOwner) {
+            if (it is Resource.Success)
+                callback(it.value.username)
+        }
+        viewModel.getUser(requireContext())
     }
 
     override fun onStop() {

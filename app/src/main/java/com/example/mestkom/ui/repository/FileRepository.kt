@@ -1,5 +1,6 @@
 package com.example.mestkom.ui.repository
 
+import com.example.mestkom.data.network.CommentRequestModel
 import com.example.mestkom.data.network.FileApi
 import com.example.mestkom.data.network.FileRequestModel
 import com.example.mestkom.data.network.VideoRequestModel
@@ -23,5 +24,13 @@ class FileRepository(
 
     suspend fun downloadVideo(id: String) = safeApiCall {
         api.downloadVideo(VideoRequestModel(id))
+    }
+
+    suspend fun getComments(idVideo: String) = safeApiCall {
+        api.getComments(VideoRequestModel(idVideo))
+    }
+
+    suspend fun sendComment(idVideo: String, username: String, text: String) = safeApiCall {
+        api.sendComment(CommentRequestModel(idVideo, username, text))
     }
 }

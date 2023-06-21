@@ -41,4 +41,7 @@
     <!-- Strings related to video view activity -->
     <string name="videoName">Название</string>
     <string name="videoDescription">Описание</string>
+
+    <!-- Strings related to comment dialog dragment -->
+    <string name="commentHint">Оставьте свой комментарий...</string>
 </resources>

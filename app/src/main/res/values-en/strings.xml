@@ -41,4 +41,7 @@
     <string name="videoName">Name</string>
     <string name="videoDescription">Description</string>
 
+    <!-- Strings related to comment dialog fragment -->
+    <string name="commentHint">Leave your comment...</string>
+
 </resources>

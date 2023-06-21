@@ -14,8 +14,6 @@ class UserPreferences (
     context: Context
 ) {
     private val dataStore = context.dataStore
-
-
     val authToken: Flow<String?>
         get() = dataStore.data.map { preferences ->
         preferences[KEY_AUTH]

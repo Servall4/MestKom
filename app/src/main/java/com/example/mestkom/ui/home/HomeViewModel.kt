@@ -36,9 +36,7 @@ class HomeViewModel(
     val uploadResponse: LiveData<Resource<ResponseBody>> = _uploadResponse
 
     private val _user: MutableLiveData<Resource<User>> = MutableLiveData()
-
-    val user: LiveData<Resource<User>>
-    get() = _user
+    val user: LiveData<Resource<User>> = _user
 
     fun getLocation(preferencesManager: PreferencesManager): Pair<Double, Double> {
         val location = preferencesManager.getLocation()
