@@ -15,6 +15,9 @@ import com.example.mestkom.data.responses.User
 import com.example.mestkom.ui.base.BaseViewModel
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.repository.UserRepository
+import com.yandex.mapkit.Animation
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
@@ -31,9 +34,6 @@ class HomeViewModel(
 
     private val _updateResponse: MutableLiveData<Resource<List<UpdateResponse>>> = MutableLiveData()
     val updateResponse: LiveData<Resource<List<UpdateResponse>>> = _updateResponse
-
-    private val _uploadResponse: MutableLiveData<Resource<ResponseBody>> = MutableLiveData()
-    val uploadResponse: LiveData<Resource<ResponseBody>> = _uploadResponse
 
     private val _user: MutableLiveData<Resource<User>> = MutableLiveData()
     val user: LiveData<Resource<User>> = _user
@@ -56,10 +56,14 @@ class HomeViewModel(
             _user.value = repository.getUser(userPreferences.userId.firstOrNull().toString())
         }
     }
-    fun uploadVideo(file: File, name: String, description: String, id: String, preferencesManager: PreferencesManager) = viewModelScope.launch {
-            val point: Pair<Double, Double> = getLocation(preferencesManager)
+    fun uploadVideo(file: File, name: String, description: String, id: String, latitude: Double, longitude: Double):LiveData<Resource<ResponseBody>> {
+        val _uploadResponse: MutableLiveData<Resource<ResponseBody>> = MutableLiveData()
+        val uploadResponse: LiveData<Resource<ResponseBody>> = _uploadResponse
             _uploadResponse.value = Resource.Loading
-            _uploadResponse.value = fileRepository.uploadVideo(file, name, id, description, point.first.toString(), point.second.toString())
+        viewModelScope.launch {
+            _uploadResponse.value = fileRepository.uploadVideo(file, name, id, description, latitude.toString(), longitude.toString())
+        }
+        return uploadResponse
     }
     fun createImageFileAndroidQ(context: Context, uri:Uri): File?{
         return try {
@@ -88,11 +92,9 @@ class HomeViewModel(
 
         return name
     }
-    fun updateVideos() {
+    fun updateVideos() = viewModelScope.launch {
         _updateResponse.value = Resource.Loading
-        viewModelScope.launch {
-            _updateResponse.value = repository.getVideos()
-        }
+        _updateResponse.value = repository.getVideos()
     }
 
 }

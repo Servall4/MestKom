@@ -41,16 +41,13 @@ class VideoViewModel(
     fun getComments(idVideo: String, position: Int) = viewModelScope.launch {
         _commentsResponse.add(MutableLiveData())
         _commentsResponse[position].value = Resource.Loading
-        viewModelScope.launch {
-            _commentsResponse[position].value = repository.getComments(idVideo)
-        }
+        _commentsResponse[position].value = repository.getComments(idVideo)
     }
 
     fun sendComment(idVideo: String, username: String, text: String): LiveData<Resource<ResponseBody>> {
         val _commentSendResponse: MutableLiveData<Resource<ResponseBody>> = MutableLiveData()
         val commentSendResponse: LiveData<Resource<ResponseBody>> = _commentSendResponse
-
-        _commentSendResponse.value = Resource.Loading
+            _commentSendResponse.value = Resource.Loading
         viewModelScope.launch {
             _commentSendResponse.value = repository.sendComment(idVideo, username, text)
         }

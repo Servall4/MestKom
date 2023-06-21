@@ -143,7 +143,6 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         }
 
         viewModel.updateVideos()
-        viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
         viewModel.observeLocation(viewLifecycleOwner) {
             binding.mapview.map.move(
                 CameraPosition(Point(it.first, it.second), 15.0f, 0.0f, 0.0f),
