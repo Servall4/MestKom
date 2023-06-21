@@ -43,8 +43,6 @@ class CommentsFragment(
                 response.observe(viewLifecycleOwner) {
                     if (it is Resource.Success) {
                         Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show()
-                        onDestroy()
-                        onDetach()
                     } else
                     {
                         Toast.makeText(context, "Loading!", Toast.LENGTH_LONG).show()

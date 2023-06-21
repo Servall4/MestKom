@@ -24,24 +24,24 @@ import java.io.InputStream
 class VideoViewModel(
     private val repository: FileRepository
 ): BaseViewModel(repository) {
-
-    private val _downloadResponse: MutableList<MutableLiveData<Resource<ResponseBody>>> = mutableListOf(MutableLiveData())
-    val downloadResponse: List<LiveData<Resource<ResponseBody>>> = _downloadResponse
-
-    private val _commentsResponse: MutableList<MutableLiveData<Resource<List<CommentResponse>>>> = mutableListOf(
-        MutableLiveData()
-    )
-    val commentResponse: List<LiveData<Resource<List<CommentResponse>>>> = _commentsResponse
-
-    fun downloadVideo(idVideo: String, position: Int) = viewModelScope.launch {
-        _downloadResponse.add(MutableLiveData())
-        _downloadResponse[position].value = Resource.Loading
-        _downloadResponse[position].value = repository.downloadVideo(idVideo)
+    fun downloadVideo(idVideo: String): LiveData<Resource<ResponseBody>> {
+        val _downloadResponse: MutableLiveData<Resource<ResponseBody>> = MutableLiveData()
+        val downloadResponse: LiveData<Resource<ResponseBody>> = _downloadResponse
+        viewModelScope.launch {
+            _downloadResponse.value = Resource.Loading
+            _downloadResponse.value = repository.downloadVideo(idVideo)
+        }
+        return downloadResponse
     }
-    fun getComments(idVideo: String, position: Int) = viewModelScope.launch {
-        _commentsResponse.add(MutableLiveData())
-        _commentsResponse[position].value = Resource.Loading
-        _commentsResponse[position].value = repository.getComments(idVideo)
+    fun getComments(idVideo: String): LiveData<Resource<List<CommentResponse>>> {
+        val _commentsResponse: MutableLiveData<Resource<List<CommentResponse>>> =
+            MutableLiveData()
+        val commentResponse: LiveData<Resource<List<CommentResponse>>> = _commentsResponse
+        viewModelScope.launch {
+            _commentsResponse.value = Resource.Loading
+            _commentsResponse.value = repository.getComments(idVideo)
+        }
+        return commentResponse
     }
 
     fun sendComment(idVideo: String, username: String, text: String): LiveData<Resource<ResponseBody>> {

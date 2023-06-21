@@ -43,15 +43,16 @@ class VideoActivity: AppCompatActivity() {
                 override fun onLoadVideo(
                     idVideo: String,
                     listBinding: ListVideoBinding,
-                    position: Int,
                     callback: (String) -> Unit
                 ) {
-                        viewModel.downloadResponse[position].observe(this@VideoActivity) { response ->
+                        val loadResponse = viewModel.downloadVideo(idVideo)
+
+                        loadResponse.observe(this@VideoActivity) {response ->
                             listBinding.animationView.visible(response is Resource.Loading)
                             when (response) {
                                 is Resource.Success -> {
-                                        callback(viewModel.saveFile(response.value, applicationContext.filesDir.absolutePath + idVideo))
-                                    }
+                                    callback(viewModel.saveFile(response.value, applicationContext.filesDir.absolutePath + idVideo))
+                                }
 
                                 is Resource.Failure -> {
                                     Toast.makeText(
@@ -65,33 +66,25 @@ class VideoActivity: AppCompatActivity() {
                                     listBinding.animationView.isVisible = true
                                 }
                             }
-                    }
+                        }
                 }
 
                 override fun onLoadComment(
                     idVideo: String,
-                    position: Int,
-                    listBinding: ListVideoBinding,
                     callback: (List<CommentResponse>) -> Unit
                 ) {
-                        viewModel.commentResponse[position].observe(this@VideoActivity) { response ->
-                            listBinding.animationView.visible(response is Resource.Loading)
-                            when (response) {
-                                is Resource.Success -> {
+                        val commentsResponse = viewModel.getComments(idVideo)
+                        commentsResponse.observe(this@VideoActivity) {  response ->
+                                if (response is Resource.Success)  {
                                     callback(response.value)
                                 }
 
-                                is Resource.Failure -> {
+                                if (response is Resource.Failure) {
                                     Toast.makeText(applicationContext, "Can't upload comments for this video! Please, try again later", Toast.LENGTH_LONG).show()
-                                }
-
-                                is Resource.Loading -> {
-                                    listBinding.animationView.isVisible = true
                                 }
                             }
                         }
-                }
-            },
+                },
             object : VideoAdapter.OnOpenCommentListener {
                 override fun onOpenComment(comments: List<CommentResponse>, idVideo: String) {
                     val actionCommentFragment = ActionCommentFragment.newInstance(comments, viewModel, idVideo, username!!)

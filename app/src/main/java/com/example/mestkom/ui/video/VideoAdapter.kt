@@ -55,19 +55,19 @@ class VideoAdapter(
 
         var comments: List<CommentResponse> = listOf()
 
-        videoLoadListener.onLoadComment(model.idVideo, position, holder.binding) {
+        videoLoadListener.onLoadComment(model.idVideo) {
             comments = it
             holder.binding.commentCounter.text = it.size.toString()
         }
-        viewModel.getComments(model.idVideo, position)
+
         holder.binding.commentButton.setOnClickListener {
             commentOpenListener.onOpenComment(comments, model.idVideo)
         }
 
-        videoLoadListener.onLoadVideo(model.idVideo, holder.binding, position) { response ->
+        videoLoadListener.onLoadVideo(model.idVideo, holder.binding) { response ->
             holder.preparePlayer(response)
         }
-        viewModel.downloadVideo(model.idVideo, position)
+        viewModel.downloadVideo(model.idVideo)
     }
 
     override fun getItemCount(): Int {
@@ -79,8 +79,8 @@ class VideoAdapter(
     }
 
     interface OnVideoLoadListener {
-        fun onLoadVideo(idVideo: String, listBinding: ListVideoBinding, position: Int, callback: (String) -> Unit)
-        fun onLoadComment(idVideo: String, position: Int, listBinding: ListVideoBinding, callback: (List<CommentResponse>) -> Unit)
+        fun onLoadVideo(idVideo: String, listBinding: ListVideoBinding, callback: (String) -> Unit)
+        fun onLoadComment(idVideo: String, callback: (List<CommentResponse>) -> Unit)
     }
 
     interface OnOpenCommentListener {
