@@ -46,20 +46,6 @@ abstract class BaseFragment<VM: BaseViewModel, B: ViewBinding, R: List<BaseRepos
         userPreferences.clear()
         requireActivity().startNewActivity(AuthActivity::class.java)
     }
-
-//    override fun onConfigurationChanged(newConfig: Configuration) {
-//        super.onConfigurationChanged(newConfig)
-//
-//        val currentNightMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-//        when (currentNightMode) {
-//            Configuration.UI_MODE_NIGHT_NO -> {
-//                requireContext().theme.applyStyle(R.id.)
-//            }
-//            Configuration.UI_MODE_NIGHT_YES -> {
-//                binding.mapview.map.isNightModeEnabled = true
-//            }
-//        }
-//    }
     abstract fun getViewModel() : Class<VM>
 
     abstract fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?): B

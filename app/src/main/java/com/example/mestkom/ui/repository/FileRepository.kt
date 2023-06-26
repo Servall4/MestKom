@@ -21,7 +21,6 @@ class FileRepository(
             info = MultipartBody.Part.createFormData("Info", Gson().toJson(fileRequestModel))
         )
     }
-
     suspend fun downloadVideo(id: String) = safeApiCall {
         api.downloadVideo(VideoRequestModel(id))
     }

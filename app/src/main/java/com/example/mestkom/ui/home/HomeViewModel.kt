@@ -97,4 +97,7 @@ class HomeViewModel(
         _updateResponse.value = repository.getVideos()
     }
 
+    fun saveLocation(lat: Double,lon: Double, preferencesManager: PreferencesManager){
+        preferencesManager.saveLocation(lat,lon)
+    }
 }

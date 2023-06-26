@@ -15,7 +15,7 @@ class CommentAdapter(
 {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        val binding = ListCommentBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding = ListCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CommentViewHolder(binding)
     }
 
@@ -24,10 +24,11 @@ class CommentAdapter(
         holder.binding.username.text = model.username
         holder.binding.commentText.text = model.text
     }
-
     override fun getItemCount(): Int = comments.size
 
     class CommentViewHolder(val binding: ListCommentBinding): RecyclerView.ViewHolder(binding.root) {
+        val username = binding.username
+        val text = binding.commentText
     }
 
 }

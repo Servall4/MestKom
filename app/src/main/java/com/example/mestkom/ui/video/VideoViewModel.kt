@@ -1,22 +1,15 @@
 package com.example.mestkom.ui.video
 
-import android.content.Context
 import android.util.Log
-import androidx.camera.core.impl.ImageOutputConfig.RotationDegreesValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.mestkom.data.network.CommentRequestModel
 import com.example.mestkom.data.network.Resource
 import com.example.mestkom.data.responses.CommentResponse
-import com.example.mestkom.data.responses.UpdateResponse
 import com.example.mestkom.ui.base.BaseViewModel
 import com.example.mestkom.ui.repository.FileRepository
-import com.example.mestkom.ui.repository.UserRepository
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
-import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 

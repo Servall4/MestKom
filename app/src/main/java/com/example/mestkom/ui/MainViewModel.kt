@@ -10,15 +10,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val preferencesManager: PreferencesManager): ViewModel() {
+class MainViewModel(): ViewModel() {
 
     private val _isSignIn: MutableLiveData<Boolean> = MutableLiveData()
     val isSignIn = _isSignIn
-
-    fun saveLocation(lat: Double,lon: Double){
-        preferencesManager.saveLocation(lat,lon)
-    }
-
     fun isSignIn(context: Context) = viewModelScope.launch {
         delay(2500)
         val userPreferences = UserPreferences(context)

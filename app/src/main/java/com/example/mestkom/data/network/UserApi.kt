@@ -18,5 +18,4 @@ interface UserApi {
 
     @POST("logout")
     suspend fun logout(): ResponseBody
-
 }

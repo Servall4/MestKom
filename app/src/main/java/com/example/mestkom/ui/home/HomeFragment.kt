@@ -1,28 +1,39 @@
 package com.example.mestkom.ui.home
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.location.Location
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.example.mestkom.R
 import com.example.mestkom.data.PreferencesManager
 import com.example.mestkom.data.network.FileApi
 import com.example.mestkom.data.network.Resource
 import com.example.mestkom.data.network.UserApi
-import com.example.mestkom.ui.repository.UserRepository
 import com.example.mestkom.databinding.FragmentHomeBinding
 import com.example.mestkom.ui.base.BaseFragment
 import com.example.mestkom.ui.cluster.ClusterView
 import com.example.mestkom.ui.cluster.PlacemarkUserData
 import com.example.mestkom.ui.repository.BaseRepository
 import com.example.mestkom.ui.repository.FileRepository
+import com.example.mestkom.ui.repository.UserRepository
 import com.example.mestkom.ui.video.VideoActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -40,9 +51,9 @@ import com.yandex.runtime.ui_view.ViewProvider
 private const val CLUSTER_RADIUS = 60.0
 private const val CLUSTER_MIN_ZOOM = 15
 
-
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseRepository>>() {
 
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val placemarkTapListener = MapObjectTapListener { mapObject, _ ->
         val placemark = mapObject as PlacemarkMapObject
         val intent = Intent(context, VideoActivity::class.java)
@@ -152,7 +163,15 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
 
         viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
 
+        if (!Build.HARDWARE.equals("ranchu")) {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+            if (savedInstanceState == null) {
+                getLocation()
+            }
+        }
+
         binding.findMeButton.setOnClickListener {
+            getLocation()
             viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
         }
     }
@@ -170,7 +189,6 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         MapKitFactory.getInstance().onStop()
         super.onStop()
     }
-
     override fun onStart() {
         super.onStart()
         MapKitFactory.getInstance().onStart()
@@ -199,5 +217,77 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
                 binding.mapview.map.isNightModeEnabled = true
             }
         }
+    }
+
+    private fun checkPermissions(): Boolean {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) return true
+
+        return false
+    }
+
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            PERMISSION_ID
+        )
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("TAG", "You have the Permission")
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
+                    val location: Location? = task.result
+                    if (location == null) {
+                        Log.d("TAG", "LOCATION IS NULL")
+                    } else {
+                        val lat = location.latitude
+                        val long = location.longitude
+                        viewModel.saveLocation(lat, long, PreferencesManager.Base(requireContext().getSharedPreferences("pref",Context.MODE_PRIVATE)))
+                    }
+                }
+            } else {
+                Toast.makeText(context, "Please Turn on Your device Location", Toast.LENGTH_LONG)
+                    .show()
+            }
+        } else {
+            requestPermissions()
+        }
+    }
+
+    private  companion object {
+        const val PERMISSION_ID = 100
     }
 }

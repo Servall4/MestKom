@@ -19,8 +19,8 @@ interface PreferencesManager {
         }
 
         override fun getLocation(): Pair<Float, Float> {
-            val lat = sharedPreferences.getFloat(LAT_KEY, 55.751575F)
-            val lon = sharedPreferences.getFloat(LON_KEY, 37.573856F)
+            val lat = sharedPreferences.getFloat(LAT_KEY, 37.7739F)
+            val lon = sharedPreferences.getFloat(LON_KEY, -122.4312F)
             return Pair(lat, lon)
         }
     }

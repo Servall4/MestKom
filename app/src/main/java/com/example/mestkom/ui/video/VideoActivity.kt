@@ -14,6 +14,7 @@ import com.example.mestkom.databinding.ListVideoBinding
 import com.example.mestkom.ui.cluster.PlacemarkUserData
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.visible
+import java.io.File
 
 
 class VideoActivity: AppCompatActivity() {
@@ -51,7 +52,7 @@ class VideoActivity: AppCompatActivity() {
                             listBinding.animationView.visible(response is Resource.Loading)
                             when (response) {
                                 is Resource.Success -> {
-                                    callback(viewModel.saveFile(response.value, applicationContext.filesDir.absolutePath + idVideo))
+                                        callback(viewModel.saveFile(response.value, applicationContext.filesDir.absolutePath + idVideo))
                                 }
 
                                 is Resource.Failure -> {
@@ -77,10 +78,11 @@ class VideoActivity: AppCompatActivity() {
                         commentsResponse.observe(this@VideoActivity) {  response ->
                                 if (response is Resource.Success)  {
                                     callback(response.value)
+
                                 }
 
                                 if (response is Resource.Failure) {
-                                    Toast.makeText(applicationContext, "Can't upload comments for this video! Please, try again later", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(applicationContext, "Can't get comments for this video! Please, try again later", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -101,7 +103,7 @@ class VideoActivity: AppCompatActivity() {
                 val previousIndex = playerItems.indexOfFirst { it.player.isPlaying }
                 if (previousIndex != -1) {
                     val player = playerItems[previousIndex].player
-                    player.pause()
+                    player.stop()
                     player.playWhenReady = false
                 }
                 val newIndex = playerItems.indexOfFirst { it.position == position }

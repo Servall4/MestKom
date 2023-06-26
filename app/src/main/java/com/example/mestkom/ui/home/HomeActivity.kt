@@ -11,7 +11,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 lateinit var binding: ActivityHomeBinding
-
 class HomeActivity : AppCompatActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -30,6 +29,4 @@ class HomeActivity : AppCompatActivity() {
 
         NavigationUI.setupWithNavController(bottomNavigation,navController)
     }
-
-
 }
