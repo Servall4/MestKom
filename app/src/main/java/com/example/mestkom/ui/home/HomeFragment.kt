@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.example.mestkom.R
@@ -54,6 +53,7 @@ private const val CLUSTER_MIN_ZOOM = 15
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseRepository>>() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     private val placemarkTapListener = MapObjectTapListener { mapObject, _ ->
         val placemark = mapObject as PlacemarkMapObject
         val intent = Intent(context, VideoActivity::class.java)
@@ -66,6 +66,15 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         startActivity(intent)
         true
     }
+
+//    private val mapListener = object : InputListener {
+//        override fun onMapTap(p0: Map, p1: Point) {
+//            TODO("Not yet implemented")
+//        }
+//        override fun onMapLongTap(p0: Map, p1: Point) {
+//            Toast.makeText(context, "Entered to editor mode", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
     private lateinit var clasterizedCollection: ClusterizedPlacemarkCollection
 
@@ -99,6 +108,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         startActivity(intent)
         true
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapKitFactory.initialize(requireContext())
@@ -115,15 +125,21 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
             }
         }
         viewModel.user.observe(viewLifecycleOwner){
-            when(it) {
-                is Resource.Failure -> {
-                    Toast.makeText(context, "Your session was expired! Please sign in again.", Toast.LENGTH_SHORT).show()
+//                if (it is Resource.Success) {
+//                    if (it.value.type == "admin") {
+//                        //Admin features
+//                        binding.mapview.map.addInputListener(mapListener)
+//                    }
+//                }
+                if (it is Resource.Failure) {
+                    Toast.makeText(
+                        context,
+                        "Your session was expired! Please sign in again.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     logout()
                 }
-                else -> {
-                }
             }
-        }
 
         viewModel.getUser(requireContext())
 
@@ -145,7 +161,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
                     clasterizedCollection.clusterPlacemarks(CLUSTER_RADIUS, CLUSTER_MIN_ZOOM)
                 }
                 is Resource.Failure -> {
-                    Toast.makeText(context, "Can't upload videos, try again later", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Can't get videos, try again later", Toast.LENGTH_LONG).show()
                 }
                 else -> {
 

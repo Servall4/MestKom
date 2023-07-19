@@ -12,10 +12,8 @@ interface UserApi {
     suspend fun getUser(
         @Body userRequestModel: UserRequestModel
     ): User
-
     @GET("update")
     suspend fun getVideos(): List<UpdateResponse>
-
     @POST("logout")
     suspend fun logout(): ResponseBody
 }
