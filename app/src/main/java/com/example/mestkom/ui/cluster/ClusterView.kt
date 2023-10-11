@@ -10,7 +10,7 @@ import com.yandex.mapkit.map.Cluster
 
 class ClusterView(context: Context) : LinearLayout(context) {
 
-    private val text by lazy { findViewById<TextView>(R.id.text_pins)}
+    private val text by lazy { findViewById<TextView>(R.id.text_pins) }
     private val layout by lazy { findViewById<View>(R.id.layout_group) }
 
     init {

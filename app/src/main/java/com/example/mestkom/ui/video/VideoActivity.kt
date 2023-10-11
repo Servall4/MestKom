@@ -17,7 +17,7 @@ import com.example.mestkom.ui.visible
 import java.io.File
 
 
-class VideoActivity: AppCompatActivity() {
+class VideoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVideoBinding
     private lateinit var adapter: VideoAdapter
@@ -30,66 +30,45 @@ class VideoActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        videos = intent.getParcelableArrayListExtra<PlacemarkUserData>("videos") as ArrayList<PlacemarkUserData>
+        videos =
+            intent.getParcelableArrayListExtra<PlacemarkUserData>("videos") as ArrayList<PlacemarkUserData>
         username = intent.getStringExtra("username")
         viewModel = VideoViewModel(getRepository())
 
-        adapter = VideoAdapter(this, videos,
+        adapter = VideoAdapter(
+            this, videos,
             object : VideoAdapter.OnVideoPreparedListener {
                 override fun onVideoPrepared(playerItem: PlayerItem) {
                     playerItems.add(playerItem)
-                }},
-            object : VideoAdapter.OnVideoLoadListener {
-
-                override fun onLoadVideo(
-                    idVideo: String,
-                    listBinding: ListVideoBinding,
-                    callback: (String) -> Unit
-                ) {
-                        val loadResponse = viewModel.downloadVideo(idVideo)
-
-                        loadResponse.observe(this@VideoActivity) {response ->
-                            listBinding.animationView.visible(response is Resource.Loading)
-                            when (response) {
-                                is Resource.Success -> {
-                                        callback(viewModel.saveFile(response.value, applicationContext.filesDir.absolutePath + idVideo))
-                                }
-
-                                is Resource.Failure -> {
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Failed loading video! Please, check your Internet connection and try again later",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-
-                                is Resource.Loading -> {
-                                    listBinding.animationView.isVisible = true
-                                }
-                            }
-                        }
                 }
+            },
+            object : VideoAdapter.OnVideoLoadListener {
 
                 override fun onLoadComment(
                     idVideo: String,
                     callback: (List<CommentResponse>) -> Unit
                 ) {
-                        val commentsResponse = viewModel.getComments(idVideo)
-                        commentsResponse.observe(this@VideoActivity) {  response ->
-                                if (response is Resource.Success)  {
-                                    callback(response.value)
+                    val commentsResponse = viewModel.getComments(idVideo)
+                    commentsResponse.observe(this@VideoActivity) { response ->
+                        if (response is Resource.Success) {
+                            callback(response.value)
 
-                                }
-
-                                if (response is Resource.Failure) {
-                                    Toast.makeText(applicationContext, "Can't get comments for this video! Please, try again later", Toast.LENGTH_LONG).show()
-                                }
-                            }
                         }
-                },
+
+                        if (response is Resource.Failure) {
+                            Toast.makeText(
+                                applicationContext,
+                                "Can't get comments for this video! Please, try again later",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+            },
             object : VideoAdapter.OnOpenCommentListener {
                 override fun onOpenComment(comments: List<CommentResponse>, idVideo: String) {
-                    val actionCommentFragment = ActionCommentFragment.newInstance(comments, viewModel, idVideo, username!!)
+                    val actionCommentFragment =
+                        ActionCommentFragment.newInstance(comments, viewModel, idVideo, username!!)
                     actionCommentFragment.show(supportFragmentManager, actionCommentFragment.tag)
                 }
             },

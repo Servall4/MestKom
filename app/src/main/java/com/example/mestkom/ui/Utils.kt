@@ -11,7 +11,7 @@ import com.example.mestkom.ui.base.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 
 
-fun<A : Activity> Activity.startNewActivity(activity: Class<A>) {
+fun <A : Activity> Activity.startNewActivity(activity: Class<A>) {
 
     Intent(this, activity).also {
         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -19,13 +19,13 @@ fun<A : Activity> Activity.startNewActivity(activity: Class<A>) {
     }
 }
 
-fun View.visible(isVisible: Boolean){
-    visibility = if(isVisible) View.VISIBLE else View.GONE
+fun View.visible(isVisible: Boolean) {
+    visibility = if (isVisible) View.VISIBLE else View.GONE
 }
 
-fun View.enable(enabled: Boolean){
+fun View.enable(enabled: Boolean) {
     isEnabled = enabled
-    alpha = if(enabled) 1f else 0.5f
+    alpha = if (enabled) 1f else 0.5f
 }
 
 fun View.snackbar(message: String, action: (() -> Unit)? = null) {
@@ -48,6 +48,7 @@ fun Fragment.handleApiError(
             "Please check your internet connection",
             retry
         )
+
         failure.errorCode == 401 -> {
             if (this is LoginFragment) {
                 requireView().snackbar("You've entered incorrect email or password")
@@ -55,6 +56,7 @@ fun Fragment.handleApiError(
                 (this as BaseFragment<*, *, *>).logout()
             }
         }
+
         else -> {
             val error = failure.errorBody?.string().toString()
             requireView().snackbar(error)

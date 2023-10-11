@@ -67,15 +67,6 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         true
     }
 
-//    private val mapListener = object : InputListener {
-//        override fun onMapTap(p0: Map, p1: Point) {
-//            TODO("Not yet implemented")
-//        }
-//        override fun onMapLongTap(p0: Map, p1: Point) {
-//            Toast.makeText(context, "Entered to editor mode", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
     private lateinit var clasterizedCollection: ClusterizedPlacemarkCollection
 
     private val clusterListener = ClusterListener { cluster ->
@@ -92,7 +83,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
 
     private val clusterTapListener = ClusterTapListener {
         binding.mapview.map.move(
-            CameraPosition(Point(it.appearance.geometry.latitude, it.appearance.geometry.longitude), 4.0f, 0.0f, 0.0f),
+            CameraPosition(
+                Point(it.appearance.geometry.latitude, it.appearance.geometry.longitude),
+                4.0f,
+                0.0f,
+                0.0f
+            ),
             Animation(Animation.Type.SMOOTH, 1.5F), null
         )
         val videos = ArrayList<PlacemarkUserData>()
@@ -120,49 +116,60 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.mapview.map.isNightModeEnabled = false
             }
+
             Configuration.UI_MODE_NIGHT_YES -> {
                 binding.mapview.map.isNightModeEnabled = true
             }
         }
-        viewModel.user.observe(viewLifecycleOwner){
-//                if (it is Resource.Success) {
-//                    if (it.value.type == "admin") {
-//                        //Admin features
-//                        binding.mapview.map.addInputListener(mapListener)
-//                    }
-//                }
-                if (it is Resource.Failure) {
-                    Toast.makeText(
-                        context,
-                        "Your session was expired! Please sign in again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    logout()
-                }
+        viewModel.user.observe(viewLifecycleOwner) {
+            if (it is Resource.Failure) {
+                Toast.makeText(
+                    context,
+                    "Your session was expired! Please sign in again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                logout()
             }
+        }
 
         viewModel.getUser(requireContext())
 
         viewModel.updateResponse.observe(viewLifecycleOwner) {
-            clasterizedCollection = binding.mapview.map.mapObjects.addClusterizedPlacemarkCollection(clusterListener)
-            when(it) {
+            clasterizedCollection =
+                binding.mapview.map.mapObjects.addClusterizedPlacemarkCollection(clusterListener)
+            when (it) {
                 is Resource.Success -> {
                     it.value.forEach {
-                        clasterizedCollection.addPlacemark(Point(it.latitude.toDouble(), it.longitude.toDouble()), ImageProvider.fromBitmap(AppCompatResources.getDrawable(requireContext(), R.drawable.video_icon)!!.toBitmap())).apply {
+                        clasterizedCollection.addPlacemark(
+                            Point(
+                                it.latitude.toDouble(),
+                                it.longitude.toDouble()
+                            ),
+                            ImageProvider.fromBitmap(
+                                AppCompatResources.getDrawable(
+                                    requireContext(),
+                                    R.drawable.video_icon
+                                )!!.toBitmap()
+                            )
+                        ).apply {
                             addTapListener(placemarkTapListener)
                             setText(it.nameVideo, TextStyle().apply {
                                 size = 10f
                                 placement = TextStyle.Placement.BOTTOM
                                 offset = 5f
-                                userData = PlacemarkUserData(it.nameVideo, it.description, it.idVideo)
+                                userData =
+                                    PlacemarkUserData(it.nameVideo, it.description, it.idVideo)
                             })
                         }
                     }
                     clasterizedCollection.clusterPlacemarks(CLUSTER_RADIUS, CLUSTER_MIN_ZOOM)
                 }
+
                 is Resource.Failure -> {
-                    Toast.makeText(context, "Can't get videos, try again later", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Can't get videos, try again later", Toast.LENGTH_LONG)
+                        .show()
                 }
+
                 else -> {
 
                 }
@@ -177,18 +184,34 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
             )
         }
 
-        viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
-
         if (!Build.HARDWARE.equals("ranchu")) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+            fusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(requireActivity())
             if (savedInstanceState == null) {
                 getLocation()
             }
         }
 
+        getLocation()
+        viewModel.getLocation(
+            PreferencesManager.Base(
+                requireActivity().getSharedPreferences(
+                    "pref",
+                    Context.MODE_PRIVATE
+                )
+            )
+        )
+
         binding.findMeButton.setOnClickListener {
             getLocation()
-            viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
+            viewModel.getLocation(
+                PreferencesManager.Base(
+                    requireActivity().getSharedPreferences(
+                        "pref",
+                        Context.MODE_PRIVATE
+                    )
+                )
+            )
         }
     }
 
@@ -205,11 +228,13 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         MapKitFactory.getInstance().onStop()
         super.onStop()
     }
+
     override fun onStart() {
         super.onStart()
         MapKitFactory.getInstance().onStart()
         binding.mapview.onStart()
     }
+
     override fun getViewModel() = HomeViewModel::class.java
 
     override fun getFragmentBinding(
@@ -217,9 +242,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         container: ViewGroup?
     ) = FragmentHomeBinding.inflate(inflater, container, false)
 
-     override fun getFragmentRepository(): List<BaseRepository> {
+    override fun getFragmentRepository(): List<BaseRepository> {
         val api = remoteDataSource.buildApi(UserApi::class.java)
-         val fileApi = remoteDataSource.buildApi(FileApi::class.java)
+        val fileApi = remoteDataSource.buildApi(FileApi::class.java)
         return listOf(UserRepository(api), FileRepository(fileApi))
     }
 
@@ -229,6 +254,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.mapview.map.isNightModeEnabled = false
             }
+
             Configuration.UI_MODE_NIGHT_YES -> {
                 binding.mapview.map.isNightModeEnabled = true
             }
@@ -239,7 +265,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED ||
+            ) == PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION
@@ -261,7 +287,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
     }
 
     private fun isLocationEnabled(): Boolean {
-        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager =
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
@@ -291,7 +318,16 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
                     } else {
                         val lat = location.latitude
                         val long = location.longitude
-                        viewModel.saveLocation(lat, long, PreferencesManager.Base(requireContext().getSharedPreferences("pref",Context.MODE_PRIVATE)))
+                        viewModel.saveLocation(
+                            lat,
+                            long,
+                            PreferencesManager.Base(
+                                requireContext().getSharedPreferences(
+                                    "pref",
+                                    Context.MODE_PRIVATE
+                                )
+                            )
+                        )
                     }
                 }
             } else {
@@ -303,7 +339,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         }
     }
 
-    private  companion object {
+    private companion object {
         const val PERMISSION_ID = 100
     }
 }

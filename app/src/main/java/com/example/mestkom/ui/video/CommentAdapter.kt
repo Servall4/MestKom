@@ -11,8 +11,7 @@ import com.example.mestkom.databinding.ListCommentBinding
 class CommentAdapter(
     val context: Context,
     private val comments: List<CommentResponse>
-    ): RecyclerView.Adapter<CommentAdapter.CommentViewHolder>()
-{
+) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val binding = ListCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,9 +23,11 @@ class CommentAdapter(
         holder.binding.username.text = model.username
         holder.binding.commentText.text = model.text
     }
+
     override fun getItemCount(): Int = comments.size
 
-    class CommentViewHolder(val binding: ListCommentBinding): RecyclerView.ViewHolder(binding.root) {
+    class CommentViewHolder(val binding: ListCommentBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val username = binding.username
         val text = binding.commentText
     }

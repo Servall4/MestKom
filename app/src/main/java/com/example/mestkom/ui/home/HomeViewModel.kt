@@ -46,7 +46,7 @@ class HomeViewModel(
         return lat to lon
     }
 
-    fun observeLocation(owner: LifecycleOwner, observer: Observer<Pair<Double, Double>>){
+    fun observeLocation(owner: LifecycleOwner, observer: Observer<Pair<Double, Double>>) {
         locationCommunication.observe(owner, observer)
     }
 
@@ -56,16 +56,32 @@ class HomeViewModel(
             _user.value = repository.getUser(userPreferences.userId.firstOrNull().toString())
         }
     }
-    fun uploadVideo(file: File, name: String, description: String, id: String, latitude: Double, longitude: Double):LiveData<Resource<ResponseBody>> {
+
+    fun uploadVideo(
+        file: File,
+        name: String,
+        description: String,
+        id: String,
+        latitude: Double,
+        longitude: Double
+    ): LiveData<Resource<ResponseBody>> {
         val _uploadResponse: MutableLiveData<Resource<ResponseBody>> = MutableLiveData()
         val uploadResponse: LiveData<Resource<ResponseBody>> = _uploadResponse
-            _uploadResponse.value = Resource.Loading
+        _uploadResponse.value = Resource.Loading
         viewModelScope.launch {
-            _uploadResponse.value = fileRepository.uploadVideo(file, name, id, description, latitude.toString(), longitude.toString())
+            _uploadResponse.value = fileRepository.uploadVideo(
+                file,
+                name,
+                id,
+                description,
+                latitude.toString(),
+                longitude.toString()
+            )
         }
         return uploadResponse
     }
-    fun createImageFileAndroidQ(context: Context, uri:Uri): File?{
+
+    fun createImageFileAndroidQ(context: Context, uri: Uri): File? {
         return try {
             val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r", null)
             val inputStream = FileInputStream(parcelFileDescriptor?.fileDescriptor)
@@ -75,11 +91,12 @@ class HomeViewModel(
 
             inputStream.copyTo(outputStream)
             file
-        }catch (e:Exception) {
-            Log.e("LOG","createImageFileAndroidQ Error : $e")
+        } catch (e: Exception) {
+            Log.e("LOG", "createImageFileAndroidQ Error : $e")
             null
         }
     }
+
     private fun ContentResolver.getFileName(fileUri: Uri): String {
         var name = ""
         val returnCursor = this.query(fileUri, null, null, null, null)
@@ -92,12 +109,14 @@ class HomeViewModel(
 
         return name
     }
+
     fun updateVideos() = viewModelScope.launch {
         _updateResponse.value = Resource.Loading
         _updateResponse.value = repository.getVideos()
     }
 
-    fun saveLocation(lat: Double,lon: Double, preferencesManager: PreferencesManager){
-        preferencesManager.saveLocation(lat,lon)
+    fun saveLocation(lat: Double, lon: Double, preferencesManager: PreferencesManager) {
+        preferencesManager.saveLocation(lat, lon)
     }
+
 }

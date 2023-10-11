@@ -21,7 +21,8 @@ import com.example.mestkom.ui.visible
 import kotlinx.coroutines.launch
 
 
-class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, List<BaseRepository>>() {
+class RegisterFragment :
+    BaseFragment<AuthViewModel, FragmentRegisterBinding, List<BaseRepository>>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,14 +31,18 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Li
         binding.progressBar3.visible(false)
         viewModel.registerResponse.observe(viewLifecycleOwner) {
             binding.progressBar3.visible(it is Resource.Loading)
-            when(it) {
+            when (it) {
                 is Resource.Success -> {
                     lifecycleScope.launch {
                         val username = binding.login.text.toString()
-                        val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(username)
+                        val action =
+                            RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(
+                                username
+                            )
                         findNavController().navigate(action)
                     }
                 }
+
                 is Resource.Failure -> {
                     if (it.errorCode == 409)
                         Toast.makeText(context, it.errorBody?.string(), Toast.LENGTH_LONG).show()
@@ -51,7 +56,7 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Li
             }
         }
 
-        binding.email.addTextChangedListener{
+        binding.email.addTextChangedListener {
             val username = binding.login.text.toString().trim()
             val password = binding.password.text.toString().trim()
             val confirmPassword = binding.passwordConfirm.text.toString().trim()
@@ -64,7 +69,11 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Li
         }
 
         binding.backButton.setOnClickListener {
-            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(""))
+            findNavController().navigate(
+                RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(
+                    ""
+                )
+            )
         }
     }
 
@@ -75,7 +84,12 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Li
         val email = binding.email.text.toString().trim()
 
         val validate = viewModel.validateRegisterInput(username, password, confirmPassword, email)
-        val errors = mutableListOf(binding.loginError, binding.passwordLengthError, binding.samePasswordsError, binding.emailError)
+        val errors = mutableListOf(
+            binding.loginError,
+            binding.passwordLengthError,
+            binding.samePasswordsError,
+            binding.emailError
+        )
         if (validate.contains(false)) {
             validate.forEachIndexed { index, b ->
                 if (!b) {
@@ -98,5 +112,6 @@ class RegisterFragment : BaseFragment<AuthViewModel, FragmentRegisterBinding, Li
         container: ViewGroup?
     ) = FragmentRegisterBinding.inflate(inflater, container, false)
 
-    override fun getFragmentRepository() =  listOf(AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences))
+    override fun getFragmentRepository() =
+        listOf(AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences))
 }

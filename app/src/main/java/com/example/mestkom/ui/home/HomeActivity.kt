@@ -11,6 +11,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 lateinit var binding: ActivityHomeBinding
+
 class HomeActivity : AppCompatActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -27,6 +28,6 @@ class HomeActivity : AppCompatActivity() {
         val bottomNavigation = binding.bottomNavView
         val navController = Navigation.findNavController(this, R.id.host_fragment)
 
-        NavigationUI.setupWithNavController(bottomNavigation,navController)
+        NavigationUI.setupWithNavController(bottomNavigation, navController)
     }
 }

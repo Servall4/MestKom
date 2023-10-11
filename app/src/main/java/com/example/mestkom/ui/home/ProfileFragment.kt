@@ -17,18 +17,20 @@ import com.example.mestkom.ui.handleApiError
 import com.example.mestkom.ui.repository.BaseRepository
 import com.example.mestkom.ui.repository.FileRepository
 
-class ProfileFragment : BaseFragment<HomeViewModel, FragmentProfileBinding, List<BaseRepository>>() {
+class ProfileFragment :
+    BaseFragment<HomeViewModel, FragmentProfileBinding, List<BaseRepository>>() {
 
     var username: String? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.user.observe(viewLifecycleOwner){
-            when(it) {
+        viewModel.user.observe(viewLifecycleOwner) {
+            when (it) {
                 is Resource.Success -> updateUI(it.value)
                 is Resource.Failure -> {
                     handleApiError(it)
                     logout()
                 }
+
                 else -> {
                 }
             }
@@ -38,7 +40,7 @@ class ProfileFragment : BaseFragment<HomeViewModel, FragmentProfileBinding, List
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToInfoFragment())
         }
 
-        binding.logoutButton.setOnClickListener{
+        binding.logoutButton.setOnClickListener {
             logout()
         }
     }
@@ -47,6 +49,7 @@ class ProfileFragment : BaseFragment<HomeViewModel, FragmentProfileBinding, List
         binding.greeting.text = getString(R.string.welcome, user.username)
         binding.registerDate.text = getString(R.string.date, user.date.substring(0, 10))
     }
+
     override fun getViewModel() = HomeViewModel::class.java
 
     override fun getFragmentBinding(

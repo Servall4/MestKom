@@ -6,11 +6,12 @@ import com.example.mestkom.data.network.UserRequestModel
 
 class UserRepository(
     private val api: UserApi
-): BaseRepository() {
+) : BaseRepository() {
 
     suspend fun getVideos() = safeApiCall {
         api.getVideos()
     }
+
     suspend fun getUser(id: String) = safeApiCall {
         api.getUser(UserRequestModel(id))
     }

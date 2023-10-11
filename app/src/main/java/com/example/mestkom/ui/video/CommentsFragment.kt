@@ -16,7 +16,7 @@ class CommentsFragment(
     private val viewModel: VideoViewModel,
     private val idVideo: String,
     private val username: String
-): BottomSheetDialogFragment() {
+) : BottomSheetDialogFragment() {
     lateinit var binding: DialogCommentsBinding
 
     override fun onCreateView(
@@ -38,14 +38,17 @@ class CommentsFragment(
         }
 
         binding.sendButton.setOnClickListener {
-            if (!binding.commentEditText.text.isNullOrEmpty())  {
-                val response = viewModel.sendComment(idVideo, username, binding.commentEditText.text.toString())
+            if (!binding.commentEditText.text.isNullOrEmpty()) {
+                val response = viewModel.sendComment(
+                    idVideo,
+                    username,
+                    binding.commentEditText.text.toString()
+                )
                 response.observe(viewLifecycleOwner) {
                     if (it is Resource.Success) {
                         Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show()
                         binding.commentEditText.text.clear()
-                    } else
-                    {
+                    } else {
                         Toast.makeText(context, "Loading!", Toast.LENGTH_LONG).show()
                     }
                 }

@@ -8,10 +8,10 @@ interface AuthApi {
     @POST("/signin")
     suspend fun login(
         @Body requestModel: RequestModel
-    ) : AuthResponse
+    ): AuthResponse
 
     @POST("/signup")
     suspend fun register(
         @Body requestModel: RequestModel
-    ) : AuthResponse
+    ): AuthResponse
 }

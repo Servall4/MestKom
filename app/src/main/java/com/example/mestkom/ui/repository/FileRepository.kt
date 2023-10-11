@@ -11,18 +11,27 @@ import java.io.File
 
 class FileRepository(
     private val api: FileApi
-): BaseRepository() {
+) : BaseRepository() {
 
-    suspend fun uploadVideo(file: File, name: String, id: String, description: String, latitude: String, longitude: String) = safeApiCall {
+    suspend fun uploadVideo(
+        file: File,
+        name: String,
+        id: String,
+        description: String,
+        latitude: String,
+        longitude: String
+    ) = safeApiCall {
         val fileRequestModel = FileRequestModel(id, name, description, longitude, latitude)
         api.uploadVideo(
             video = MultipartBody.Part.createFormData(
-                "video", file.name, file.asRequestBody()),
+                "video", file.name, file.asRequestBody()
+            ),
             info = MultipartBody.Part.createFormData("Info", Gson().toJson(fileRequestModel))
         )
     }
+
     suspend fun downloadVideo(id: String) = safeApiCall {
-        api.downloadVideo(VideoRequestModel(id))
+        api.downloadVideo(id)
     }
 
     suspend fun getComments(idVideo: String) = safeApiCall {

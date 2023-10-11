@@ -17,13 +17,13 @@ import com.example.mestkom.ui.startNewActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-abstract class BaseFragment<VM: BaseViewModel, B: ViewBinding, R: List<BaseRepository>> : Fragment(){
+abstract class BaseFragment<VM : BaseViewModel, B : ViewBinding, R : List<BaseRepository>> :
+    Fragment() {
 
     protected lateinit var userPreferences: UserPreferences
     protected lateinit var binding: B
     protected lateinit var viewModel: VM
     protected val remoteDataSource = RemoteDataSource()
-
 
 
     override fun onCreateView(
@@ -46,9 +46,10 @@ abstract class BaseFragment<VM: BaseViewModel, B: ViewBinding, R: List<BaseRepos
         userPreferences.clear()
         requireActivity().startNewActivity(AuthActivity::class.java)
     }
-    abstract fun getViewModel() : Class<VM>
+
+    abstract fun getViewModel(): Class<VM>
 
     abstract fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?): B
 
-    abstract fun getFragmentRepository() : R
+    abstract fun getFragmentRepository(): R
 }

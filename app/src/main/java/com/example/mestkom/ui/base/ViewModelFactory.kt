@@ -19,7 +19,11 @@ class ViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(AuthViewModel::class.java) -> AuthViewModel(repositories.first() as AuthRepository) as T
-            modelClass.isAssignableFrom(HomeViewModel::class.java) -> HomeViewModel(repositories.first() as UserRepository, repositories[1] as FileRepository) as T
+            modelClass.isAssignableFrom(HomeViewModel::class.java) -> HomeViewModel(
+                repositories.first() as UserRepository,
+                repositories[1] as FileRepository
+            ) as T
+
             modelClass.isAssignableFrom(VideoViewModel::class.java) -> VideoViewModel(repositories.first() as FileRepository) as T
             else -> throw IllegalArgumentException("View Model class not found")
         }

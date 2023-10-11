@@ -1,5 +1,5 @@
 package com.example.mestkom.data.network
 
-data class UserRequestModel (
+data class UserRequestModel(
     val id: String
 )

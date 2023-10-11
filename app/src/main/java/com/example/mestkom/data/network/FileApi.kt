@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Streaming
 
 interface FileApi {
@@ -19,9 +20,9 @@ interface FileApi {
     ): ResponseBody
 
     @Streaming
-    @POST("/getVideo")
+    @GET("video/{id}")
     suspend fun downloadVideo(
-        @Body fileRequestModel: VideoRequestModel
+        @Path ("id") id: String
     ): ResponseBody
 
     @POST("/getComments")

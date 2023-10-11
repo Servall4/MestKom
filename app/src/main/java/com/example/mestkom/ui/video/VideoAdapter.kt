@@ -19,19 +19,19 @@ class VideoAdapter(
     private var videoLoadListener: OnVideoLoadListener,
     private var commentOpenListener: OnOpenCommentListener,
     private val viewModel: VideoViewModel
-): RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
+) : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
     class VideoViewHolder(
         val binding: ListVideoBinding,
         val context: Context,
         var videoPreparedListener: OnVideoPreparedListener,
         val viewModel: VideoViewModel
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var player: ExoPlayer
         private lateinit var mediaItem: MediaItem
 
-        fun preparePlayer(filePath: String) {
-            mediaItem = MediaItem.fromUri(filePath)
+        fun preparePlayer(idVideo: String) {
+            mediaItem = MediaItem.fromUri(idVideo)
             player = ExoPlayer.Builder(context).build()
             player.repeatMode = Player.REPEAT_MODE_ONE
             binding.playerView.player = player
@@ -39,7 +39,6 @@ class VideoAdapter(
             player.setMediaItem(mediaItem)
             player.prepare()
             player.playWhenReady = true
-            player.play()
             videoPreparedListener.onVideoPrepared(PlayerItem(player, absoluteAdapterPosition))
         }
     }
@@ -65,9 +64,7 @@ class VideoAdapter(
             commentOpenListener.onOpenComment(comments, model.idVideo)
         }
 
-        videoLoadListener.onLoadVideo(model.idVideo, holder.binding) { response ->
-            holder.preparePlayer(response)
-        }
+        holder.preparePlayer("http://217.25.93.73:8080/video/" + model.idVideo)
     }
 
     override fun getItemCount(): Int {
@@ -79,7 +76,6 @@ class VideoAdapter(
     }
 
     interface OnVideoLoadListener {
-        fun onLoadVideo(idVideo: String, listBinding: ListVideoBinding, callback: (String) -> Unit)
         fun onLoadComment(idVideo: String, callback: (List<CommentResponse>) -> Unit)
     }
 

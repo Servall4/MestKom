@@ -35,7 +35,7 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<Bas
 
         viewModel.loginResponse.observe(viewLifecycleOwner) {
             binding.progressBar.visible(it is Resource.Loading)
-            when(it) {
+            when (it) {
                 is Resource.Success -> {
                     lifecycleScope.launch {
                         viewModel.saveAuthToken(it.value.token)
@@ -43,19 +43,21 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<Bas
                         requireActivity().startNewActivity(HomeActivity::class.java)
                     }
                 }
+
                 is Resource.Failure -> {
                     if (it.errorCode == 409)
-                        Toast.makeText(context, it.errorBody?.string(),Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, it.errorBody?.string(), Toast.LENGTH_LONG).show()
                     else
                         handleApiError(it)
                 }
+
                 is Resource.Loading -> {
                     binding.progressBar.visible(true)
                 }
             }
         }
 
-        binding.password.addTextChangedListener{
+        binding.password.addTextChangedListener {
             val username = binding.login.text.toString().trim()
             binding.signInButton.enable(username.isNotEmpty() && it.toString().isNotEmpty())
         }
@@ -81,7 +83,7 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<Bas
                 }
             }
         } else {
-            errors.forEach{
+            errors.forEach {
                 it.isVisible = false
             }
             viewModel.login(username, password)
@@ -95,6 +97,7 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, List<Bas
         container: ViewGroup?
     ) = FragmentLoginBinding.inflate(inflater, container, false)
 
-    override fun getFragmentRepository() =  listOf(AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences))
+    override fun getFragmentRepository() =
+        listOf(AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences))
 
 }

@@ -6,4 +6,4 @@ data class FileRequestModel(
     val description: String,
     val longitude: String,
     val latitude: String
-    )
+)

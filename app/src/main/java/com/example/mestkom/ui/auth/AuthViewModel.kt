@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val repository: AuthRepository
-): BaseViewModel(repository) {
+) : BaseViewModel(repository) {
 
     private val _loginResponse: MutableLiveData<Resource<AuthResponse>> = MutableLiveData()
     val loginResponse: LiveData<Resource<AuthResponse>> = _loginResponse
@@ -58,6 +58,7 @@ class AuthViewModel(
         list.add(Patterns.EMAIL_ADDRESS.matcher(email).matches())
         return list
     }
+
     suspend fun saveAuthToken(token: String) {
         repository.saveAuthToken(token)
     }

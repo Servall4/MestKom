@@ -7,7 +7,7 @@ import com.example.mestkom.data.network.RequestModel
 class AuthRepository(
     private val api: AuthApi,
     private val preferences: UserPreferences
-): BaseRepository() {
+) : BaseRepository() {
 
     suspend fun login(
         username: String,
@@ -23,6 +23,7 @@ class AuthRepository(
     ) = safeApiCall {
         api.register(RequestModel(username, password, email))
     }
+
     suspend fun saveAuthToken(token: String) {
         preferences.saveAuthToken(token)
     }

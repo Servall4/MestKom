@@ -28,7 +28,14 @@ class InfoFragment : BaseFragment<HomeViewModel, FragmentInfoBinding, List<BaseR
         val alphaAnimation = AlphaAnimation(0f, 1f)
         alphaAnimation.duration = 1000
 
-        val rotateAnimation = RotateAnimation(45f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+        val rotateAnimation = RotateAnimation(
+            45f,
+            0f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f
+        )
         rotateAnimation.duration = 1000
         binding.AppName.animation = alphaAnimation
         binding.Developers.animation = alphaAnimation

@@ -9,11 +9,11 @@ data class PlacemarkUserData(
     val description: String,
     val idVideo: String
 ) : Parcelable {
-    constructor(parcel: Parcel): this (
-            parcel.readString() ?: "",
+    constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
-            parcel.readString() ?: ""
-            )
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
+    )
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(name)
@@ -25,7 +25,7 @@ data class PlacemarkUserData(
         return 0
     }
 
-    companion object CREATOR: Parcelable.Creator<PlacemarkUserData> {
+    companion object CREATOR : Parcelable.Creator<PlacemarkUserData> {
         override fun createFromParcel(source: Parcel): PlacemarkUserData {
             return PlacemarkUserData(source)
         }
