@@ -239,6 +239,7 @@ class CameraActivity : AppCompatActivity() {
                     val currentTime = System.currentTimeMillis()
                     elapsedTime = currentTime - startTime
                     updateTimerText()
+                    delay(1000)
                 }
             }
         }

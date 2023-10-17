@@ -185,33 +185,19 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         }
 
         if (!Build.HARDWARE.equals("ranchu")) {
-            fusedLocationProviderClient =
-                LocationServices.getFusedLocationProviderClient(requireActivity())
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
             if (savedInstanceState == null) {
                 getLocation()
             }
         }
 
-        getLocation()
-        viewModel.getLocation(
-            PreferencesManager.Base(
-                requireActivity().getSharedPreferences(
-                    "pref",
-                    Context.MODE_PRIVATE
-                )
-            )
-        )
+        viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
 
         binding.findMeButton.setOnClickListener {
-            getLocation()
-            viewModel.getLocation(
-                PreferencesManager.Base(
-                    requireActivity().getSharedPreferences(
-                        "pref",
-                        Context.MODE_PRIVATE
-                    )
-                )
-            )
+            if (!Build.HARDWARE.equals("ranchu")) {
+                getLocation()
+            }
+            viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
         }
     }
 
