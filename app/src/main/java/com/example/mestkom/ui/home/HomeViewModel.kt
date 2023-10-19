@@ -6,31 +6,26 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.mestkom.data.PreferencesManager
 import com.example.mestkom.data.UserPreferences
-import com.example.mestkom.data.map.LocationCommunication
+import com.example.mestkom.data.location.LocationRepository
 import com.example.mestkom.data.network.Resource
 import com.example.mestkom.data.responses.UpdateResponse
 import com.example.mestkom.data.responses.User
 import com.example.mestkom.ui.base.BaseViewModel
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.repository.UserRepository
-import com.yandex.mapkit.Animation
-import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.map.CameraPosition
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.concurrent.Executors
 
 class HomeViewModel(
     private val repository: UserRepository,
     private val fileRepository: FileRepository
 ) : BaseViewModel(repository) {
-
-    private val locationCommunication = LocationCommunication.Base()
 
     private val _updateResponse: MutableLiveData<Resource<List<UpdateResponse>>> = MutableLiveData()
     val updateResponse: LiveData<Resource<List<UpdateResponse>>> = _updateResponse
@@ -38,16 +33,20 @@ class HomeViewModel(
     private val _user: MutableLiveData<Resource<User>> = MutableLiveData()
     val user: LiveData<Resource<User>> = _user
 
-    fun getLocation(preferencesManager: PreferencesManager): Pair<Double, Double> {
-        val location = preferencesManager.getLocation()
-        val lat = location.first.toDouble()
-        val lon = location.second.toDouble()
-        locationCommunication.map(Pair(lat, lon))
-        return lat to lon
+    private lateinit var locationRepository: LocationRepository
+    fun startLocationUpdates() = locationRepository.startLocationUpdates()
+    fun stopLocationUpdates() = locationRepository.stopLocationUpdates()
+
+    fun initRepository(context: Context) {
+        locationRepository = LocationRepository.getInstance(context.applicationContext, Executors.newSingleThreadExecutor())
     }
 
-    fun observeLocation(owner: LifecycleOwner, observer: Observer<Pair<Double, Double>>) {
-        locationCommunication.observe(owner, observer)
+    fun getLocation(): LiveData<Pair<Float, Float>> {
+        return locationRepository.getLocation()
+    }
+
+    fun isReceivingLocationUpdates(): LiveData<Boolean> {
+        return locationRepository.receivingLocationUpdates
     }
 
     fun getUser(context: Context) {
@@ -114,9 +113,4 @@ class HomeViewModel(
         _updateResponse.value = Resource.Loading
         _updateResponse.value = repository.getVideos()
     }
-
-    fun saveLocation(lat: Double, lon: Double, preferencesManager: PreferencesManager) {
-        preferencesManager.saveLocation(lat, lon)
-    }
-
 }

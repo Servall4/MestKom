@@ -1,14 +1,11 @@
 package com.example.mestkom.ui.home
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.location.Location
-import android.location.LocationManager
-import android.os.Build
+import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,10 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.example.mestkom.R
-import com.example.mestkom.data.PreferencesManager
 import com.example.mestkom.data.network.FileApi
 import com.example.mestkom.data.network.Resource
 import com.example.mestkom.data.network.UserApi
@@ -27,22 +22,27 @@ import com.example.mestkom.databinding.FragmentHomeBinding
 import com.example.mestkom.ui.base.BaseFragment
 import com.example.mestkom.ui.cluster.ClusterView
 import com.example.mestkom.ui.cluster.PlacemarkUserData
+import com.example.mestkom.ui.hasPermission
 import com.example.mestkom.ui.repository.BaseRepository
 import com.example.mestkom.ui.repository.FileRepository
 import com.example.mestkom.ui.repository.UserRepository
+import com.example.mestkom.ui.requestPermissionWithRationale
 import com.example.mestkom.ui.video.VideoActivity
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.ClusterListener
 import com.yandex.mapkit.map.ClusterTapListener
 import com.yandex.mapkit.map.ClusterizedPlacemarkCollection
+import com.yandex.mapkit.map.CompositeIcon
 import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.map.TextStyle
+import com.yandex.mapkit.user_location.UserLocationLayer
+import com.yandex.mapkit.user_location.UserLocationObjectListener
+import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.ui_view.ViewProvider
 
@@ -50,9 +50,8 @@ import com.yandex.runtime.ui_view.ViewProvider
 private const val CLUSTER_RADIUS = 60.0
 private const val CLUSTER_MIN_ZOOM = 15
 
-class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseRepository>>() {
-
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseRepository>>(),
+    UserLocationObjectListener {
 
     private val placemarkTapListener = MapObjectTapListener { mapObject, _ ->
         val placemark = mapObject as PlacemarkMapObject
@@ -68,6 +67,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
     }
 
     private lateinit var clasterizedCollection: ClusterizedPlacemarkCollection
+
+    private lateinit var userLocationLayer: UserLocationLayer
 
     private val clusterListener = ClusterListener { cluster ->
         cluster.appearance.setView(
@@ -105,6 +106,14 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         true
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (!context.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            requestFineLocationPermission()
+            requestBackgroundLocationPermission()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapKitFactory.initialize(requireContext())
@@ -112,6 +121,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        userLocationLayer =
+            MapKitFactory.getInstance().createUserLocationLayer(binding.mapview.mapWindow)
+        userLocationLayer.isVisible = true
+        userLocationLayer.setObjectListener(this)
+
+        viewModel.initRepository(requireContext())
         when (requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.mapview.map.isNightModeEnabled = false
@@ -177,27 +192,33 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         }
 
         viewModel.updateVideos()
-        viewModel.observeLocation(viewLifecycleOwner) {
+
+        viewModel.getLocation().observe(viewLifecycleOwner) { location ->
             binding.mapview.map.move(
-                CameraPosition(Point(it.first, it.second), 15.0f, 0.0f, 0.0f),
+                CameraPosition(
+                    Point(location.first.toDouble(), location.second.toDouble()),
+                    15.0f,
+                    0.0f,
+                    0.0f
+                ),
                 Animation(Animation.Type.SMOOTH, 1.5F), null
             )
         }
 
-        if (!Build.HARDWARE.equals("ranchu")) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-            if (savedInstanceState == null) {
-                getLocation()
-            }
-        }
-
-        viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
-
         binding.findMeButton.setOnClickListener {
-            if (!Build.HARDWARE.equals("ranchu")) {
-                getLocation()
-            }
-            viewModel.getLocation(PreferencesManager.Base(requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)))
+            val position = viewModel.getLocation().value!!
+            binding.mapview.map.move(
+                CameraPosition(
+                    Point(
+                        position.first.toDouble(),
+                        position.second.toDouble()
+                    ),
+                    15.0f,
+                    0.0f,
+                    0.0f
+                ),
+                Animation(Animation.Type.SMOOTH, 1.5F), null
+            )
         }
     }
 
@@ -211,6 +232,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
 
     override fun onStop() {
         binding.mapview.onStop()
+        viewModel.stopLocationUpdates()
         MapKitFactory.getInstance().onStop()
         super.onStop()
     }
@@ -219,6 +241,11 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         super.onStart()
         MapKitFactory.getInstance().onStart()
         binding.mapview.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startLocationUpdates()
     }
 
     override fun getViewModel() = HomeViewModel::class.java
@@ -247,85 +274,98 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, List<BaseR
         }
     }
 
-    private fun checkPermissions(): Boolean {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) return true
-
-        return false
-    }
-
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ),
-            PERMISSION_ID
-        )
-    }
-
-    private fun isLocationEnabled(): Boolean {
-        val locationManager =
-            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<out String>,
+        permissions: Array<String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("TAG", "You have the Permission")
-            }
-        }
-    }
+        Log.d("PermissionResult", "onRequestPermissionResult")
+        when (requestCode) {
+            REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE,
+            REQUEST_BACKGROUND_LOCATION_PERMISSIONS_REQUEST_CODE -> when {
+                grantResults.isEmpty() ->
+                    // If user interaction was interrupted, the permission request
+                    // is cancelled and you receive an empty array.
+                    Log.d("HomeFragment", "User interaction was cancelled.")
 
-    @SuppressLint("MissingPermission")
-    private fun getLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-                fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
-                    val location: Location? = task.result
-                    if (location == null) {
-                        Log.d("TAG", "LOCATION IS NULL")
-                    } else {
-                        val lat = location.latitude
-                        val long = location.longitude
-                        viewModel.saveLocation(
-                            lat,
-                            long,
-                            PreferencesManager.Base(
-                                requireContext().getSharedPreferences(
-                                    "pref",
-                                    Context.MODE_PRIVATE
-                                )
-                            )
-                        )
-                    }
+                grantResults[0] == PackageManager.PERMISSION_GRANTED ->
+                    Toast.makeText(context, "You gave permission", Toast.LENGTH_LONG).show()
+
+                else -> {
+
+                    val permissionDeniedExplanation =
+                        if (requestCode == REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE) {
+                            Toast.makeText(
+                                context,
+                                "You should gave fine location permission to properly work application",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "You should gave background location permission to properly work application",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                 }
-            } else {
-                Toast.makeText(context, "Please Turn on Your device Location", Toast.LENGTH_LONG)
-                    .show()
             }
-        } else {
-            requestPermissions()
         }
     }
 
-    private companion object {
-        const val PERMISSION_ID = 100
+    override fun onObjectAdded(p0: UserLocationView) {
+        userLocationLayer.setAnchor(
+            PointF(
+                (binding.mapview.width() * 0.5).toFloat(),
+                (binding.mapview.height() * 0.5).toFloat()
+            ),
+            PointF(
+                (binding.mapview.width() * 0.5).toFloat(),
+                (binding.mapview.height() * 0.83).toFloat()
+            )
+        )
+
+        p0.arrow.setIcon(ImageProvider.fromResource(context, R.drawable.cluster_view_background))
+
+        val pinIcon: CompositeIcon = p0.pin.useCompositeIcon()
+
+//        p0.accuracyCircle.fillColor(Color.BLUE and -0x66000001)
     }
+
+    override fun onObjectRemoved(p0: UserLocationView) {
+    }
+
+    override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {
+    }
+
+    private fun requestFineLocationPermission() {
+        val permissionApproved =
+            context?.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) ?: return
+
+        if (!permissionApproved) {
+            requestPermissionWithRationale(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE
+            )
+        }
+    }
+
+    private fun requestBackgroundLocationPermission() {
+        val permissionApproved =
+            context?.hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) ?: return
+
+        if (!permissionApproved) {
+            requestPermissionWithRationale(
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                REQUEST_BACKGROUND_LOCATION_PERMISSIONS_REQUEST_CODE
+            )
+        }
+    }
+
+    companion object {
+        private const val ARG_PERMISSION_REQUEST_TYPE =
+            "com.example.mestkom.PERMISSION_REQUEST_TYPE"
+        private const val REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE = 34
+        private const val REQUEST_BACKGROUND_LOCATION_PERMISSIONS_REQUEST_CODE = 56
+    }
+
 }
