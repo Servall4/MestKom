@@ -36,7 +36,7 @@ class LocationManager private constructor(private val context: Context) {
     private val locationUpdatePendingIntent: PendingIntent by lazy {
         val intent = Intent(context, LocationUpdatesBroadcastReceiver::class.java)
         intent.action = LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES
-        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
     @Throws(SecurityException::class)
